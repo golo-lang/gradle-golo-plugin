@@ -1,14 +1,10 @@
-apply plugin: org.gololang.gradle.GoloPlugin
+apply plugin: 'groovy'
 
 repositories {
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
-    golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
-}
-
-golo {
-    mainModule = 'hello.World'
+    compile gradleApi(), localGroovy(), 'commons-io:commons-io:1.4'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 }
