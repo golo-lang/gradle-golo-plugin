@@ -8,6 +8,7 @@ import static org.apache.commons.io.FilenameUtils.removeExtension
 class GoloCompile extends AbstractCompile {
 
     private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'
+    public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
     FileCollection goloClasspath
 
     protected void compile() {

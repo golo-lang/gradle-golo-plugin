@@ -12,6 +12,8 @@ import org.gradle.api.tasks.JavaExec
 
 import javax.inject.Inject
 
+import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
+
 class GoloPlugin implements Plugin<Project> {
 
     public static final String GOLO_PLUGIN_NAME = "golo"
@@ -48,7 +50,7 @@ class GoloPlugin implements Plugin<Project> {
                 .setDescription("The Golo libraries to be used for this Golo project.")
 
         project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
-            goloCompile.conventionMapping.map('goloClasspath') { goloConfiguration }
+            goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
         }
     }
 
