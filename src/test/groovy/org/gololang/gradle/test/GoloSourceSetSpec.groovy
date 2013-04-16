@@ -1,11 +1,9 @@
-package org.gololang.gradle.test.integration
+package org.gololang.gradle.test
 
 import org.gololang.gradle.GoloSourceSet
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.internal.file.FileResolver
 import spock.lang.Specification
-
-import static org.junit.Assert.assertThat
 
 class GoloSourceSetSpec extends Specification {
     def sourceSet = new GoloSourceSet('<display-name>', [resolve: {it as File}] as FileResolver)

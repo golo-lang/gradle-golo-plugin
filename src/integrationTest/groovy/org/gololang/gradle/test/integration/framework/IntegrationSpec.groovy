@@ -56,6 +56,10 @@ abstract class IntegrationSpec extends Specification {
         file
     }
 
+    protected boolean fileExists(String path) {
+        new File(dir.root, path).exists()
+    }
+
     protected ExecutedTask task(String name) {
         executedTasks.find { it.task.name == name }
     }
@@ -68,7 +72,9 @@ abstract class IntegrationSpec extends Specification {
 
     protected BuildResult runTasks(String... tasks) {
         BuildResult result = launcher(tasks).run()
-        assert !result.failure
+        if (result.failure) {
+            throw result.failure
+        }
         result
     }
 

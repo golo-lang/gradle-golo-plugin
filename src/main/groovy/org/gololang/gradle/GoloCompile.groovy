@@ -20,12 +20,12 @@ class GoloCompile extends AbstractCompile {
         }
     }
 
-    private def instantiateCompiler() {
+    protected def instantiateCompiler() {
         def goloCompilerClass = loadGoloCompilerClass()
         goloCompilerClass.getConstructor().newInstance()
     }
 
-    private Class loadGoloCompilerClass() {
+    protected Class loadGoloCompilerClass() {
         def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
         def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().getClassLoader())
         Class.forName(GOLO_COMPILER_CLASS_NAME, true, goloClassLoader)

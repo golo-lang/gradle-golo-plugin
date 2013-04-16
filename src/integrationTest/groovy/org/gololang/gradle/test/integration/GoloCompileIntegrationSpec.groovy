@@ -2,7 +2,7 @@ package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
 
-class GoloPluginIntegrationSpec extends IntegrationSpec {
+class GoloCompileIntegrationSpec extends IntegrationSpec {
     void setup() {
         buildFile << """
             def GoloPlugin = project.class.classLoader.loadClass('org.gololang.gradle.GoloPlugin')
@@ -26,5 +26,22 @@ class GoloPluginIntegrationSpec extends IntegrationSpec {
 
         then:
         task('compileGolo').state.isUpToDate()
+    }
+
+    void 'compileGolo compiles files'() {
+        given:
+        file('src/main/golo/helloworld.golo') << """
+            module hello.World
+
+            function main = |args| {
+                println("Hello world!")
+            }
+        """
+
+        when:
+        runTasks('compileGolo')
+
+        then:
+        fileExists('build/classes/main/hello/World.class')
     }
 }

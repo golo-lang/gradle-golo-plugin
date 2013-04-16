@@ -1,15 +1,44 @@
+apply plugin: 'idea'
 apply plugin: 'groovy'
 
 repositories {
     mavenCentral()
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    golo
+}
+
+sourceSets {
+    main.compileClasspath += configurations.golo
+    integrationTest {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
 }
 
 dependencies {
     compile gradleApi(), localGroovy(), 'commons-io:commons-io:1.4'
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
+    golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
 }
 
 task archiveReports(type: Zip) {
     from reporting.baseDir
     archiveName 'reports.zip'
+}
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn integrationTest
+
+idea.module {
+    testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
+    scopes.COMPILE.plus += configurations.golo
 }
