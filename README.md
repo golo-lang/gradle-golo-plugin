@@ -1,0 +1,1 @@
+# Gradle GOLO plugin [![Build Status](https://drone.io/github.com/erdi/gradle-golo-plugin/status.png)](https://drone.io/github.com/erdi/gradle-golo-plugin/latest)
