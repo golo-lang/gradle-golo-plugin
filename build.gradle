@@ -16,10 +16,27 @@
 
 
 
+
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
+apply plugin: 'nexus'
 apply from: 'gradle/idea.gradle'
+apply from: 'gradle/pom.gradle'
+
+group = 'org.golo-lang'
+version = '0.1-SNAPSHOT'
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+	}
+}
 
 repositories {
     mavenCentral()
