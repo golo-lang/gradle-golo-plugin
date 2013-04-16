@@ -8,3 +8,8 @@ dependencies {
     compile gradleApi(), localGroovy(), 'commons-io:commons-io:1.4'
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 }
+
+task archiveReports(type: Zip) {
+    from reporting.baseDir
+    archiveName 'reports.zip'
+}
