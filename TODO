@@ -1,0 +1,7 @@
+* add copyright headers
+* create GradleGoloCompiler + unit tests + integration tests for compilation failures
+* use application plugin for run capabilities
+* Codenarc
+* add nexus plugin
+* Code coverage
+* Docs
