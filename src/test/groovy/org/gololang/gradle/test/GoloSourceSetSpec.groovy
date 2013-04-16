@@ -16,6 +16,8 @@
 
 
 
+
+
 package org.gololang.gradle.test
 
 import org.gololang.gradle.GoloSourceSet
@@ -24,7 +26,7 @@ import org.gradle.api.internal.file.FileResolver
 import spock.lang.Specification
 
 class GoloSourceSetSpec extends Specification {
-    def sourceSet = new GoloSourceSet('<display-name>', [resolve: {it as File}] as FileResolver)
+    def sourceSet = new GoloSourceSet('<display-name>', [resolve: { it as File }] as FileResolver)
 
     void 'default values'() {
         expect:
@@ -38,10 +40,13 @@ class GoloSourceSetSpec extends Specification {
     }
 
     void 'can configure source set'() {
+		given:
+		def mainGoloSourceDir = 'src/golo'
+
         when:
-        sourceSet.golo { srcDir 'src/golo' }
+        sourceSet.golo { srcDir mainGoloSourceDir }
 
         then:
-        sourceSet.golo.srcDirs == [new File('src/golo').canonicalFile] as Set
+        sourceSet.golo.srcDirs == [new File(mainGoloSourceDir).canonicalFile] as Set
     }
 }

@@ -16,6 +16,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration.framework
 
 import org.gradle.BuildResult
@@ -56,7 +58,7 @@ abstract class IntegrationSpec extends Specification {
     }
 
     protected File getBuildFile() {
-        file("build.gradle")
+        file('build.gradle')
     }
 
     protected File directory(String path) {

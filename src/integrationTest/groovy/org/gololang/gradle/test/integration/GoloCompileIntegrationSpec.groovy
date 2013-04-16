@@ -16,12 +16,17 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
 
 class GoloCompileIntegrationSpec extends IntegrationSpec {
-    void setup() {
+
+	private static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
+
+	void setup() {
         buildFile << """
             def GoloPlugin = project.class.classLoader.loadClass('org.gololang.gradle.GoloPlugin')
 
@@ -40,10 +45,10 @@ class GoloCompileIntegrationSpec extends IntegrationSpec {
 
     void 'compileGolo is up to date for an empty source set'() {
         when:
-        runTasks('compileGolo')
+        runTasks(COMPILE_GOLO_TASK_NAME)
 
         then:
-        task('compileGolo').state.isUpToDate()
+        task(COMPILE_GOLO_TASK_NAME).state.isUpToDate()
     }
 
     void 'compileGolo compiles files'() {
@@ -57,7 +62,7 @@ class GoloCompileIntegrationSpec extends IntegrationSpec {
         """
 
         when:
-        runTasks('compileGolo')
+        runTasks(COMPILE_GOLO_TASK_NAME)
 
         then:
         fileExists('build/classes/main/hello/World.class')

@@ -18,6 +18,7 @@
 
 apply plugin: 'idea'
 apply plugin: 'groovy'
+apply plugin: 'codenarc'
 apply from: 'gradle/idea.gradle'
 
 repositories {
@@ -40,9 +41,16 @@ sourceSets {
 }
 
 dependencies {
+	golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
+
     compile gradleApi(), localGroovy(), 'commons-io:commons-io:1.4'
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
-    golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
+
+	codenarc 'org.codenarc:CodeNarc:0.18.1'
+}
+
+codenarc {
+	configFile = file('gradle/config/codenarc/rulesets.groovy')
 }
 
 task archiveReports(type: Zip) {

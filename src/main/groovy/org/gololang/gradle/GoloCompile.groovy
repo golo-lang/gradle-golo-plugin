@@ -16,6 +16,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.file.FileCollection
@@ -38,14 +40,14 @@ class GoloCompile extends AbstractCompile {
         }
     }
 
-    protected def instantiateCompiler() {
+    protected instantiateCompiler() {
         def goloCompilerClass = loadGoloCompilerClass()
         goloCompilerClass.getConstructor().newInstance()
     }
 
     protected Class loadGoloCompilerClass() {
         def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
-        def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().getClassLoader())
-        Class.forName(GOLO_COMPILER_CLASS_NAME, true, goloClassLoader)
+        def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().classLoader)
+		goloClassLoader.loadClass(GOLO_COMPILER_CLASS_NAME, true)
     }
 }

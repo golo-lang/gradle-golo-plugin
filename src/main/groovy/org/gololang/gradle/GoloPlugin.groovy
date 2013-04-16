@@ -16,6 +16,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.Plugin
@@ -34,11 +36,11 @@ import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
 
 class GoloPlugin implements Plugin<Project> {
 
-    public static final String GOLO_PLUGIN_NAME = "golo"
+    public static final String GOLO_PLUGIN_NAME = 'golo'
     public static final String GOLO_GROUP_NAME = GOLO_PLUGIN_NAME
     public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
 
-    public static final String TASK_RUN_NAME = "run"
+    public static final String TASK_RUN_NAME = 'run'
 
     Project project
     FileResolver fileResolver
@@ -46,7 +48,7 @@ class GoloPlugin implements Plugin<Project> {
     GoloPluginExtension pluginExtension
 
     @Inject
-    public GoloPlugin(FileResolver fileResolver) {
+    GoloPlugin(FileResolver fileResolver) {
         this.fileResolver = fileResolver
     }
 
@@ -65,7 +67,7 @@ class GoloPlugin implements Plugin<Project> {
     private void configureGoloConfigurationAndClasspath() {
         goloConfiguration = project.configurations.create(GOLO_CONFIGURATION_NAME)
                 .setVisible(false)
-                .setDescription("The Golo libraries to be used for this Golo project.")
+                .setDescription('The Golo libraries to be used for this Golo project.')
 
         project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
             goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
@@ -75,11 +77,11 @@ class GoloPlugin implements Plugin<Project> {
     void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
         project.convention.getPlugin(JavaPluginConvention).sourceSets.all { sourceSet ->
             def goloSourceSet = new GoloSourceSet(sourceSet.displayName, fileResolver)
-            new DslObject(sourceSet).convention.plugins.put('golo', goloSourceSet)
+            new DslObject(sourceSet).convention.plugins.put(GOLO_PLUGIN_NAME, goloSourceSet)
 
             goloSourceSet.golo.srcDir("src/${sourceSet.name}/golo")
 
-            def compileTaskName = sourceSet.getCompileTaskName('golo')
+            def compileTaskName = sourceSet.getCompileTaskName(GOLO_PLUGIN_NAME)
 
             def goloCompile = project.tasks.add(compileTaskName, GoloCompile)
             javaBasePlugin.configureForSourceSet(sourceSet, goloCompile)
@@ -97,7 +99,7 @@ class GoloPlugin implements Plugin<Project> {
 
     private void addRunTask() {
         def run = project.tasks.add(TASK_RUN_NAME, JavaExec)
-        run.description = "Runs this project as a Golo application"
+        run.description = 'Runs this project as a Golo application'
         run.group = GOLO_GROUP_NAME
         run.classpath = project.sourceSets.main.runtimeClasspath + goloConfiguration
         run.main = 'fr.insalyon.citi.golo.cli.MainGolo'
