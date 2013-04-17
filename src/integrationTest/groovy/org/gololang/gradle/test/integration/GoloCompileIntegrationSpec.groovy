@@ -16,45 +16,17 @@
 
 
 
-
-
-
-
-
-
 package org.gololang.gradle.test.integration
 
-import org.gololang.gradle.test.integration.framework.IntegrationSpec
-
-class GoloCompileIntegrationSpec extends IntegrationSpec {
-
-	private static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
+class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void setup() {
         buildFile << """
-            def GoloPlugin = project.class.classLoader.loadClass('org.gololang.gradle.GoloPlugin')
-
-            apply plugin: GoloPlugin
-
-            repositories {
-                mavenCentral()
-            }
-
             dependencies {
                 golo 'org.golo-lang:golo:0-preview2'
             }
         """
     }
-
-	private File writeGoodFile() {
-		file('src/main/golo/helloworld.golo') << """
-            module hello.World
-
-            function main = |args| {
-                println("Hello world!")
-            }
-        """
-	}
 
 	private File writeBadFile() {
 		file('src/main/golo/helloworld.golo') << """

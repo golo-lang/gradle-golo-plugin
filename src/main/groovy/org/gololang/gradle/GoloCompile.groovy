@@ -20,8 +20,11 @@
 
 
 
+
+
 package org.gololang.gradle
 
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.tasks.compile.CompilationFailedException
 import org.gradle.api.tasks.compile.AbstractCompile
@@ -36,6 +39,7 @@ class GoloCompile extends AbstractCompile {
 	FileCollection goloClasspath
 
     protected void compile() {
+		ensureGoloConfigurationSpecified()
         def compiler = instantiateCompiler()
         source.files.each { file ->
             file.withInputStream { stream ->
@@ -54,7 +58,13 @@ class GoloCompile extends AbstractCompile {
         }
     }
 
-    protected instantiateCompiler() {
+	protected void ensureGoloConfigurationSpecified() {
+		if (getGoloClasspath().empty) {
+			throw new InvalidUserDataException('You must assign a Golo library to the "golo" configuration.')
+		}
+	}
+
+	protected instantiateCompiler() {
         def goloCompilerClass = loadGoloCompilerClass()
         goloCompilerClass.getConstructor().newInstance()
     }
