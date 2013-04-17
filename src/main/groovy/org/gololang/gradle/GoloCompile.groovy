@@ -18,9 +18,12 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.file.FileCollection
+import org.gradle.api.internal.tasks.compile.CompilationFailedException
 import org.gradle.api.tasks.compile.AbstractCompile
 
 import static org.apache.commons.io.FilenameUtils.removeExtension
@@ -29,13 +32,24 @@ class GoloCompile extends AbstractCompile {
 
     private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'
     public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
-    FileCollection goloClasspath
+	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompilationException'
+	FileCollection goloClasspath
 
     protected void compile() {
         def compiler = instantiateCompiler()
         source.files.each { file ->
             file.withInputStream { stream ->
-                compiler.compileTo(removeExtension(file.name), stream, destinationDir)
+				try {
+                	compiler.compileTo(removeExtension(file.name), stream, destinationDir)
+				} catch (Throwable e) {
+					if (e.class.name == COMPILATION_EXCEPTION_CLASS_NAME) {
+						System.err.println()
+						def messages = [e.message, e.cause?.message] + e.problems*.description
+						messages.findAll { it }.each { System.err.println(it) }
+						throw new CompilationFailedException()
+					}
+					throw e
+				}
             }
         }
     }

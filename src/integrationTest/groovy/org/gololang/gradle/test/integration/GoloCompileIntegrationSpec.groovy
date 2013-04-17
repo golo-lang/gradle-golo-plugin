@@ -20,6 +20,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
@@ -44,9 +46,27 @@ class GoloCompileIntegrationSpec extends IntegrationSpec {
         """
     }
 
+	private File writeGoodFile() {
+		file('src/main/golo/helloworld.golo') << """
+            module hello.World
+
+            function main = |args| {
+                println("Hello world!")
+            }
+        """
+	}
+
+	private File writeBadFile() {
+		file('src/main/golo/helloworld.golo') << """
+            module hello.World
+
+            function main = |args|
+        """
+	}
+
     void 'compileGolo is up to date for an empty source set'() {
         when:
-        runTasks(COMPILE_GOLO_TASK_NAME)
+        runTasksSuccessfully(COMPILE_GOLO_TASK_NAME)
 
         then:
         task(COMPILE_GOLO_TASK_NAME).state.isUpToDate()
@@ -54,18 +74,25 @@ class GoloCompileIntegrationSpec extends IntegrationSpec {
 
     void 'compileGolo compiles files'() {
         given:
-        file('src/main/golo/helloworld.golo') << """
-            module hello.World
-
-            function main = |args| {
-                println("Hello world!")
-            }
-        """
+		writeGoodFile()
 
         when:
-        runTasks(COMPILE_GOLO_TASK_NAME)
+        runTasksSuccessfully(COMPILE_GOLO_TASK_NAME)
 
         then:
         fileExists('build/classes/main/hello/World.class')
     }
+
+	void 'compileGolo prints out messages on compilation failure'() {
+		given:
+		writeBadFile()
+
+		when:
+		runTasksWithFailure(COMPILE_GOLO_TASK_NAME)
+
+		then:
+		standardErrorOutput.contains('Compilation failed; see the compiler error output for details.')
+		standardErrorOutput.contains('In Golo module: helloworld')
+		standardErrorOutput =~ /(?s)Was expecting one of:.*"\{".*"->"/
+	}
 }

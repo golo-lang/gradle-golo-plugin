@@ -18,16 +18,18 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration.framework
 
 import org.gradle.BuildResult
 import org.gradle.GradleLauncher
 import org.gradle.StartParameter
-import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.execution.TaskExecutionListener
 import org.gradle.api.tasks.TaskState
 import org.gradle.initialization.DefaultGradleLauncher
+import org.gradle.logging.internal.StreamBackedStandardOutputListener
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -37,6 +39,7 @@ import spock.util.mop.Use
 abstract class IntegrationSpec extends Specification {
     @Rule final TemporaryFolder dir = new TemporaryFolder()
 
+	private final StringBuilder errorOutputBuilder = new StringBuilder()
     protected List<ExecutedTask> executedTasks = []
 
     protected GradleLauncher launcher(String... args) {
@@ -44,6 +47,7 @@ abstract class IntegrationSpec extends Specification {
         startParameter.setProjectDir(dir.root)
         DefaultGradleLauncher launcher = GradleLauncher.newInstance(startParameter)
         launcher.gradle.scriptClassLoader.addParent(getClass().classLoader)
+		launcher.addStandardErrorListener(new StreamBackedStandardOutputListener(errorOutputBuilder))
         executedTasks.clear()
         launcher.addListener(new TaskExecutionListener() {
             void beforeExecute(Task task) {
@@ -56,6 +60,10 @@ abstract class IntegrationSpec extends Specification {
         })
         launcher
     }
+
+	protected String getStandardErrorOutput() {
+		errorOutputBuilder.toString()
+	}
 
     protected File getBuildFile() {
         file('build.gradle')
@@ -90,15 +98,21 @@ abstract class IntegrationSpec extends Specification {
         tasks
     }
 
-    protected BuildResult runTasks(String... tasks) {
-        BuildResult result = launcher(tasks).run()
+    protected BuildResult runTasksSuccessfully(String... tasks) {
+        BuildResult result = runTasks(tasks)
         if (result.failure) {
             throw result.failure
         }
         result
     }
 
-    protected Project projectForTasks(String... tasks) {
-        runTasks(tasks).gradle.rootProject
-    }
+	protected BuildResult runTasksWithFailure(String... tasks) {
+		BuildResult result = runTasks(tasks)
+		assert result.failure
+		result
+	}
+
+	protected BuildResult runTasks(String... tasks) {
+		launcher(tasks).run()
+	}
 }

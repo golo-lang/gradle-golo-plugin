@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 ruleset {
 	ruleset('rulesets/basic.xml')
 	ruleset('rulesets/braces.xml')
@@ -26,14 +28,21 @@ ruleset {
 	}
 	ruleset('rulesets/dry.xml') {
 		DuplicateStringLiteral {
-			doNotApplyToClassNames = 'org.gololang.gradle.test.integration.framework.IntegrationSpec'
+			doNotApplyToClassNames = 'org.gololang.gradle.test.integration.framework.IntegrationSpec,GoloCompileIntegrationSpec'
 		}
 	}
-	ruleset('rulesets/exceptions.xml')
+	ruleset('rulesets/exceptions.xml') {
+		CatchThrowable {
+			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
+		}
+	}
 	ruleset('rulesets/formatting.xml') {
 		SpaceAfterClosingBrace {
 			doNotApplyToClassNames = 'org.gololang.gradle.test.integration.framework.IntegrationSpec$1'
 			checkClosureMapEntryValue = false
+		}
+		LineLength {
+			length = 125
 		}
 	}
 	ruleset('rulesets/generic.xml')
@@ -46,7 +55,11 @@ ruleset {
 	}
 	ruleset('rulesets/jdbc.xml')
 	ruleset('rulesets/junit.xml')
-	ruleset('rulesets/logging.xml')
+	ruleset('rulesets/logging.xml') {
+		SystemErrPrint {
+			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
+		}
+	}
 	ruleset('rulesets/naming.xml') {
 		MethodName {
 			regex = /[a-z][\w\s]*/
