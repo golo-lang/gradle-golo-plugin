@@ -17,6 +17,8 @@
 
 
 
+
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
@@ -42,7 +44,6 @@ buildscript {
 
 repositories {
     mavenCentral()
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 configurations {
@@ -60,7 +61,7 @@ sourceSets {
 }
 
 dependencies {
-	golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
+	golo 'org.golo-lang:golo:0-preview2'
 
 	groovy localGroovy()
     compile gradleApi(), 'commons-io:commons-io:1.4'

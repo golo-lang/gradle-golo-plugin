@@ -18,6 +18,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
@@ -34,11 +36,10 @@ class GoloCompileIntegrationSpec extends IntegrationSpec {
 
             repositories {
                 mavenCentral()
-                maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
             }
 
             dependencies {
-                golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
+                golo 'org.golo-lang:golo:0-preview2'
             }
         """
     }
