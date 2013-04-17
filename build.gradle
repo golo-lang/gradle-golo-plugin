@@ -17,13 +17,13 @@
 
 
 
-
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
 apply plugin: 'nexus'
 apply from: 'gradle/idea.gradle'
 apply from: 'gradle/pom.gradle'
+apply from: 'gradle/clover.gradle'
 
 group = 'org.golo-lang'
 version = '0.1-SNAPSHOT'
@@ -31,10 +31,12 @@ version = '0.1-SNAPSHOT'
 buildscript {
 	repositories {
 		mavenCentral()
+		mavenLocal()
 	}
 
 	dependencies {
 		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+		classpath 'org.gradle.api.plugins:gradle-clover-plugin:0.6'
 	}
 }
 
@@ -60,15 +62,14 @@ sourceSets {
 dependencies {
 	golo 'org.golo-lang:golo:0-preview2-SNAPSHOT'
 
-    compile gradleApi(), localGroovy(), 'commons-io:commons-io:1.4'
+	groovy localGroovy()
+    compile gradleApi(), 'commons-io:commons-io:1.4'
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 
 	codenarc 'org.codenarc:CodeNarc:0.18.1'
 }
 
-codenarc {
-	configFile = file('gradle/config/codenarc/rulesets.groovy')
-}
+codenarc.configFile = file('gradle/config/codenarc/rulesets.groovy')
 
 task archiveReports(type: Zip) {
     from reporting.baseDir
