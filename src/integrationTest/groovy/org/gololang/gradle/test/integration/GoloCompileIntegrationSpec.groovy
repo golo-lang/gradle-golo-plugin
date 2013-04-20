@@ -16,16 +16,14 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void setup() {
-        buildFile << """
-            dependencies {
-                golo 'org.golo-lang:golo:0-preview2'
-            }
-        """
+		configureGoloConfiguration()
     }
 
 	private File writeBadFile() {

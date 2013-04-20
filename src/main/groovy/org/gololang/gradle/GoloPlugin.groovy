@@ -18,31 +18,35 @@
 
 
 
+
+
 package org.gololang.gradle
 
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.plugins.DslObject
+import org.gradle.api.plugins.ApplicationPlugin
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.tasks.JavaExec
 
 import javax.inject.Inject
 
 import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
+import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
+import static org.gradle.api.plugins.JavaPlugin.RUNTIME_CONFIGURATION_NAME
 
 class GoloPlugin implements Plugin<Project> {
 
     public static final String GOLO_PLUGIN_NAME = 'golo'
-    public static final String GOLO_GROUP_NAME = GOLO_PLUGIN_NAME
     public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
 
-    public static final String TASK_RUN_NAME = 'run'
+	private static final String MAIN_GOLO_CLASS_NAME = 'fr.insalyon.citi.golo.cli.MainGolo'
 
-    Project project
+	Project project
     FileResolver fileResolver
     Configuration goloConfiguration
     GoloPluginExtension pluginExtension
@@ -56,25 +60,16 @@ class GoloPlugin implements Plugin<Project> {
     void apply(Project project) {
         this.project = project
         project.plugins.apply(JavaPlugin)
+		project.plugins.apply(ApplicationPlugin)
 
         configureSourceSetDefaults(project.plugins.getPlugin(JavaBasePlugin))
-        configureGoloConfigurationAndClasspath()
+		configureApplicationPlugin()
 
+		configureGoloConfigurationAndClasspath()
         addGoloPluginExtension()
-        addRunTask()
     }
 
-    private void configureGoloConfigurationAndClasspath() {
-        goloConfiguration = project.configurations.create(GOLO_CONFIGURATION_NAME)
-                .setVisible(false)
-                .setDescription('The Golo libraries to be used for this Golo project.')
-
-        project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
-            goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
-        }
-    }
-
-    void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
+    private void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
         project.convention.getPlugin(JavaPluginConvention).sourceSets.all { sourceSet ->
             def goloSourceSet = new GoloSourceSet(sourceSet.displayName, fileResolver)
             new DslObject(sourceSet).convention.plugins.put(GOLO_PLUGIN_NAME, goloSourceSet)
@@ -93,16 +88,27 @@ class GoloPlugin implements Plugin<Project> {
         }
     }
 
+	private void configureApplicationPlugin() {
+		project.mainClassName = MAIN_GOLO_CLASS_NAME
+		project.tasks.getByName(TASK_RUN_NAME).doFirst {
+			if (!pluginExtension.mainModule) {
+				throw new InvalidUserDataException('You must specify the mainModule using golo extension.')
+			}
+			args pluginExtension.mainModule
+		}
+	}
+
+	private void configureGoloConfigurationAndClasspath() {
+		goloConfiguration = project.configurations.create(GOLO_CONFIGURATION_NAME)
+			.setVisible(false)
+			.setDescription('The Golo libraries to be used for this Golo project.')
+		project.configurations.getByName(RUNTIME_CONFIGURATION_NAME).extendsFrom(goloConfiguration)
+		project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
+			goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
+		}
+	}
+
     private void addGoloPluginExtension() {
         pluginExtension = project.extensions.create(GOLO_PLUGIN_NAME, GoloPluginExtension)
-    }
-
-    private void addRunTask() {
-        def run = project.tasks.add(TASK_RUN_NAME, JavaExec)
-        run.description = 'Runs this project as a Golo application'
-        run.group = GOLO_GROUP_NAME
-        run.classpath = project.sourceSets.main.runtimeClasspath + goloConfiguration
-        run.main = 'fr.insalyon.citi.golo.cli.MainGolo'
-        run.doFirst { it.args pluginExtension.mainModule }
     }
 }

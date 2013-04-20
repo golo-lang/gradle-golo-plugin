@@ -14,45 +14,36 @@
  * limitations under the License.
  */
 
-
-
-
-
 package org.gololang.gradle.test.integration
 
-import org.gololang.gradle.test.integration.framework.IntegrationSpec
+import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 
-abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
-
-	protected static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
-
+class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 	void setup() {
+		configureGoloConfiguration()
+		writeMainModuleFile()
 		buildFile << """
-            def GoloPlugin = project.class.classLoader.loadClass('org.gololang.gradle.GoloPlugin')
-
-            apply plugin: GoloPlugin
-
-            repositories {
-                mavenCentral()
-            }
-        """
+			golo.mainModule = 'hello.World'
+		"""
 	}
 
-	protected File writeGoodFile() {
+	private writeMainModuleFile() {
 		file('src/main/golo/helloworld.golo') << """
             module hello.World
 
+            import java.io.File
+
             function main = |args| {
-                println("Hello world!")
+                File("createdByGolo"): mkdir()
             }
         """
 	}
 
-	protected void configureGoloConfiguration() {
-		buildFile << """
-            dependencies {
-                golo 'org.golo-lang:golo:0-preview2'
-            }
-        """
+	void 'run executes main module'() {
+		when:
+		runTasksSuccessfully(TASK_RUN_NAME)
+
+		then:
+		fileExists('createdByGolo')
 	}
 }

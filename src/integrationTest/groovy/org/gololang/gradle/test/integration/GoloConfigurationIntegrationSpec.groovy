@@ -16,17 +16,33 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
-class GoloConfigurationIntegrationSpec extends GoloPluginIntegrationSpec {
-	void 'an informative message is presented if golo dependency is not specified'() {
-		given:
-		writeGoodFile()
+import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 
+class GoloConfigurationIntegrationSpec extends GoloPluginIntegrationSpec {
+	void setup() {
+		writeGoodFile()
+	}
+
+	void 'an informative message is presented if golo dependency is not specified'() {
 		when:
 		runTasksWithFailure(COMPILE_GOLO_TASK_NAME)
 
 		then:
 		standardErrorOutput.contains('You must assign a Golo library to the "golo" configuration.')
+	}
+
+	void 'an informative message is presented if main module is not specified and it is requested'() {
+		given:
+		configureGoloConfiguration()
+
+		when:
+		runTasksWithFailure(TASK_RUN_NAME)
+
+		then:
+		standardErrorOutput.contains('You must specify the mainModule using golo extension.')
 	}
 }
