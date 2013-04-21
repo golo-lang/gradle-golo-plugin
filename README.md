@@ -1,6 +1,6 @@
 # Gradle GOLO plugin [![Build Status](https://drone.io/github.com/erdi/gradle-golo-plugin/status.png)](https://drone.io/github.com/erdi/gradle-golo-plugin/latest)
 
-The plugin provides task for compiling [Golo](http://golo-lang.org/) code. It also applies [Java Plugin](http://www.gradle.org/docs/current/userguide/java_plugin.html) and [Application Plugin](http://www.gradle.org/docs/current/userguide/application_plugin.html) to allow for building, packaging and executing code written in Golo.
+The plugin provides a task type for compiling [Golo](http://golo-lang.org/) code. It also applies [Java Plugin](http://www.gradle.org/docs/current/userguide/java_plugin.html) and [Application Plugin](http://www.gradle.org/docs/current/userguide/application_plugin.html) to allow for building, packaging and executing code written in Golo.
 
 ## Usage
 
@@ -22,7 +22,7 @@ You also need to add the plugin JAR to the classpath. The easiest way is to pull
 
 ## Project layout
 
-The plugin adds a Golo source set directory to all source sets defined in the project. If you wish to add any Golo code to the main source you should put it in `src/main/golo` subdirectory of your project. If you wish to modify the location of a Golo directory for a source set you can do so by using project's `sourceSet` configuration block:
+The plugin adds a Golo source set directory to all source sets defined in the project. If you wish to add any Golo code to the main source you should put it in `src/main/golo` subdirectory of your project. If you wish to modify the location of a Golo directory for a source set you can do so by using project's `sourceSets` configuration block:
 
 	sourceSets {
 		main {
@@ -50,7 +50,7 @@ This plugin integrates with and applies Java and Application plugins to the proj
 
 * `build` - comming from Java Plugin, depending on `check` and `assemble`, allows to perform a full build of the project
 * `run` - comming from Application Plugin, starts the application by running the main module specified in `golo.mainModule` extension property
-* `distZip` and `distTar` - comming from Application plugin, allow to creates a full distribution archive including runtime libraries and OS specific scripts which run the main module specified in `golo.mainModule` extension property
+* `distZip` and `distTar` - comming from Application plugin, allow to create a full distribution archive including runtime libraries and OS specific scripts which run the main module specified in `golo.mainModule` extension property
 
 ## Example
 
