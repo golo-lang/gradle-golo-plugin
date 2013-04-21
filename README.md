@@ -12,6 +12,7 @@ You also need to add the plugin JAR to the classpath. The easiest way is to pull
 
 	buildscript {
 		repositories {
+			mavenCentral()
 			maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		}
 
