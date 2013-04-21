@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 package org.gololang.gradle.test.integration
 
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
@@ -45,5 +47,26 @@ class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 
 		then:
 		fileExists('createdByGolo')
+	}
+
+	void 'running packaged app executes main module'() {
+		given:
+		buildFile << """
+			applicationName = 'installScriptTest'
+
+			installApp.destinationDir = file('installed')
+
+			task runInstalledApp(type: Exec) {
+				dependsOn installApp
+				workingDir file('installed/bin')
+				commandLine './installScriptTest'
+			}
+		"""
+
+		when:
+		runTasksSuccessfully('runInstalledApp')
+
+		then:
+		fileExists('installed/bin/createdByGolo')
 	}
 }

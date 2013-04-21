@@ -20,6 +20,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.InvalidUserDataException
@@ -37,7 +39,7 @@ import javax.inject.Inject
 
 import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
-import static org.gradle.api.plugins.JavaPlugin.RUNTIME_CONFIGURATION_NAME
+import static org.gradle.api.plugins.ApplicationPlugin.TASK_START_SCRIPTS_NAME
 
 class GoloPlugin implements Plugin<Project> {
 
@@ -63,10 +65,10 @@ class GoloPlugin implements Plugin<Project> {
 		project.plugins.apply(ApplicationPlugin)
 
         configureSourceSetDefaults(project.plugins.getPlugin(JavaBasePlugin))
-		configureApplicationPlugin()
-
 		configureGoloConfigurationAndClasspath()
-        addGoloPluginExtension()
+
+		configureApplicationPlugin()
+		addGoloPluginExtension()
     }
 
     private void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
@@ -89,12 +91,29 @@ class GoloPlugin implements Plugin<Project> {
     }
 
 	private void configureApplicationPlugin() {
-		project.mainClassName = MAIN_GOLO_CLASS_NAME
-		project.tasks.getByName(TASK_RUN_NAME).doFirst {
-			if (!pluginExtension.mainModule) {
-				throw new InvalidUserDataException('You must specify the mainModule using golo extension.')
-			}
+		def run = project.tasks.getByName(TASK_RUN_NAME)
+		run.classpath += goloConfiguration
+		run.conventionMapping.main = { MAIN_GOLO_CLASS_NAME }
+		run.doFirst {
+			ensureMainModuleConfigured()
 			args pluginExtension.mainModule
+		}
+
+		def startScripts = project.tasks.getByName(TASK_START_SCRIPTS_NAME)
+		startScripts.classpath += goloConfiguration
+		startScripts.conventionMapping.mainClassName = { "$MAIN_GOLO_CLASS_NAME ${pluginExtension.mainModule}".toString() }
+		startScripts.doFirst {
+			ensureMainModuleConfigured()
+		}
+
+		project.convention.plugins.application.applicationDistribution.into('lib') {
+			from(goloConfiguration)
+		}
+	}
+
+	private void ensureMainModuleConfigured() {
+		if (!pluginExtension.mainModule) {
+			throw new InvalidUserDataException('You must specify the mainModule using golo extension.')
 		}
 	}
 
@@ -102,7 +121,6 @@ class GoloPlugin implements Plugin<Project> {
 		goloConfiguration = project.configurations.create(GOLO_CONFIGURATION_NAME)
 			.setVisible(false)
 			.setDescription('The Golo libraries to be used for this Golo project.')
-		project.configurations.getByName(RUNTIME_CONFIGURATION_NAME).extendsFrom(goloConfiguration)
 		project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
 			goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
 		}

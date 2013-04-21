@@ -19,6 +19,8 @@
 
 
 
+
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
@@ -33,7 +35,6 @@ version = '0.1-SNAPSHOT'
 buildscript {
 	repositories {
 		mavenCentral()
-		mavenLocal()
 	}
 
 	dependencies {

@@ -18,6 +18,8 @@
 
 
 
+
+
 ruleset {
 	ruleset('rulesets/basic.xml')
 	ruleset('rulesets/braces.xml')
@@ -64,7 +66,7 @@ ruleset {
 	}
 	ruleset('rulesets/naming.xml') {
 		MethodName {
-			regex = /[a-z][\w\s]*/
+			regex = /[a-z]["#\w\s]*/
 		}
 		ConfusingMethodName {
 			doNotApplyToClassNames = 'org.gololang.gradle.GoloSourceSet'
