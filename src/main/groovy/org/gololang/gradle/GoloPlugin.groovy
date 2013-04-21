@@ -24,6 +24,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.InvalidUserDataException
@@ -42,6 +44,7 @@ import javax.inject.Inject
 import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_START_SCRIPTS_NAME
+import static org.gradle.api.plugins.JavaPlugin.RUNTIME_CONFIGURATION_NAME
 
 /**
  * @author Marcin Erdmann
@@ -97,7 +100,6 @@ class GoloPlugin implements Plugin<Project> {
 
 	private void configureApplicationPlugin() {
 		def run = project.tasks.getByName(TASK_RUN_NAME)
-		run.classpath += goloConfiguration
 		run.conventionMapping.main = { MAIN_GOLO_CLASS_NAME }
 		run.doFirst {
 			ensureMainModuleConfigured()
@@ -105,14 +107,9 @@ class GoloPlugin implements Plugin<Project> {
 		}
 
 		def startScripts = project.tasks.getByName(TASK_START_SCRIPTS_NAME)
-		startScripts.classpath += goloConfiguration
 		startScripts.conventionMapping.mainClassName = { "$MAIN_GOLO_CLASS_NAME ${pluginExtension.mainModule}".toString() }
 		startScripts.doFirst {
 			ensureMainModuleConfigured()
-		}
-
-		project.convention.plugins.application.applicationDistribution.into('lib') {
-			from(goloConfiguration)
 		}
 	}
 
@@ -126,6 +123,9 @@ class GoloPlugin implements Plugin<Project> {
 		goloConfiguration = project.configurations.create(GOLO_CONFIGURATION_NAME)
 			.setVisible(false)
 			.setDescription('The Golo libraries to be used for this Golo project.')
+
+		project.configurations.getByName(RUNTIME_CONFIGURATION_NAME).extendsFrom(goloConfiguration)
+
 		project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
 			goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
 		}
