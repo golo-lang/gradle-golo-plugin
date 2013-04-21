@@ -22,6 +22,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.InvalidUserDataException
@@ -31,6 +33,9 @@ import org.gradle.api.tasks.compile.AbstractCompile
 
 import static org.apache.commons.io.FilenameUtils.removeExtension
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloCompile extends AbstractCompile {
 
     private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'

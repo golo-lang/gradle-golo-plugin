@@ -18,10 +18,15 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
 
+/**
+ * @author Marcin Erdmann
+ */
 abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 
 	protected static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'

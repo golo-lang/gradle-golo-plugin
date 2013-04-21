@@ -18,8 +18,13 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void setup() {

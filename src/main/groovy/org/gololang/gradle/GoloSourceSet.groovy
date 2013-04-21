@@ -18,6 +18,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.file.SourceDirectorySet
@@ -26,6 +28,9 @@ import org.gradle.api.internal.file.FileResolver
 
 import static org.gradle.util.ConfigureUtil.configure
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloSourceSet {
     private final SourceDirectorySet golo
 

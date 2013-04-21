@@ -16,10 +16,15 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration.framework
 
 import org.gradle.api.internal.tasks.TaskStateInternal
 
+/**
+ * @author Marcin Erdmann
+ */
 @Category(TaskStateInternal)
 class UpToDateCategory {
     boolean isUpToDate() {

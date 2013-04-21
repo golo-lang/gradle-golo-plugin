@@ -22,6 +22,8 @@
 
 
 
+
+
 package org.gololang.gradle
 
 import org.gradle.api.InvalidUserDataException
@@ -41,6 +43,9 @@ import static org.gololang.gradle.GoloCompile.GOLO_CLASSPATH_FIELD
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_START_SCRIPTS_NAME
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloPlugin implements Plugin<Project> {
 
     public static final String GOLO_PLUGIN_NAME = 'golo'

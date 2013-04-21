@@ -20,6 +20,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import spock.lang.Unroll
@@ -27,6 +29,9 @@ import spock.lang.Unroll
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_START_SCRIPTS_NAME
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloConfigurationIntegrationSpec extends GoloPluginIntegrationSpec {
 	void setup() {
 		writeGoodFile()

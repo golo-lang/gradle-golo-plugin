@@ -16,10 +16,15 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 	void setup() {
 		configureGoloConfiguration()

@@ -20,6 +20,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration.framework
 
 import org.gradle.BuildResult
@@ -35,6 +37,9 @@ import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 import spock.util.mop.Use
 
+/**
+ * @author Marcin Erdmann
+ */
 @Use(UpToDateCategory)
 abstract class IntegrationSpec extends Specification {
     @Rule final TemporaryFolder dir = new TemporaryFolder()

@@ -16,8 +16,13 @@
 
 
 
+
+
 package org.gololang.gradle
 
+/**
+ * @author Marcin Erdmann
+ */
 class GoloPluginExtension {
     String mainModule
 }
