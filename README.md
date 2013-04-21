@@ -21,6 +21,16 @@ You also need to add the plugin JAR to the classpath. The easiest way is to pull
 		}
 	}
 
+Finally you have to specify which version of Golo you wish to use to compile your project. You can do it using the `golo` configuration:
+
+	repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        golo 'org.golo-lang:golo:0-preview2'
+    }
+
 ## Project layout
 
 The plugin adds a Golo source set directory to all source sets defined in the project. If you wish to add any Golo code to the main source you should put it in `src/main/golo` subdirectory of your project. If you wish to modify the location of a Golo directory for a source set you can do so by using project's `sourceSets` configuration block:
