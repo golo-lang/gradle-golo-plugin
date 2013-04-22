@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 project.afterEvaluate {
 	jar {
 		manifest {
@@ -35,9 +37,9 @@ modifyPom {
 		inceptionYear '2013'
 
 		scm {
-			url 'https://github.com/erdi/gradle-golo-plugin'
-			connection 'scm:git://github.com/erdi/gradle-golo-plugin.git'
-			developerConnection 'scm:git@github.com:erdi/gradle-golo-plugin.git'
+			url 'https://github.com/golo-lang/gradle-golo-plugin'
+			connection 'scm:git://github.com/golo-lang/gradle-golo-plugin.git'
+			developerConnection 'scm:git@github.com:golo-lang/gradle-golo-plugin.git'
 		}
 
 		licenses {
