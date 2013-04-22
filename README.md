@@ -8,16 +8,15 @@ To use the plugin apply it to your project in your build script:
 
 	apply plugin: 'golo'
 
-You also need to add the plugin JAR to the classpath. The easiest way is to pull the artifact from [Sonatype OSS Snapshot Repository](https://oss.sonatype.org/content/repositories/snapshots/org/golo-lang/gradle-golo-plugin/):
+You also need to add the plugin JAR to the classpath. The easiest way is to pull the artifact from Maven Central Repository:
 
 	buildscript {
 		repositories {
 			mavenCentral()
-			maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		}
 
 		dependencies {
-			classpath 'org.golo-lang:gradle-golo-plugin:0.1-SNAPSHOT'
+			classpath 'org.golo-lang:gradle-golo-plugin:0.1'
 		}
 	}
 
