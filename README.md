@@ -1,4 +1,4 @@
-# Gradle GOLO plugin [![Build Status](https://drone.io/github.com/erdi/gradle-golo-plugin/status.png)](https://drone.io/github.com/erdi/gradle-golo-plugin/latest)
+# Gradle GOLO plugin [![Build Status](https://drone.io/github.com/golo-lang/gradle-golo-plugin/status.png)](https://drone.io/github.com/golo-lang/gradle-golo-plugin/latest)
 
 The plugin provides a task type for compiling [Golo](http://golo-lang.org/) code. It also applies [Java Plugin](http://www.gradle.org/docs/current/userguide/java_plugin.html) and [Application Plugin](http://www.gradle.org/docs/current/userguide/application_plugin.html) to allow for building, packaging and executing code written in Golo.
 
