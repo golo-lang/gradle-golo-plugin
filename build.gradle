@@ -23,6 +23,8 @@
 
 
 
+
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
@@ -41,7 +43,7 @@ buildscript {
 
 	dependencies {
 		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
-		classpath 'org.gradle.api.plugins:gradle-clover-plugin:0.6'
+		classpath 'org.gradle.api.plugins:gradle-clover-plugin:0.6.1'
 	}
 }
 
@@ -83,6 +85,7 @@ task archiveReports(type: Zip) {
 task integrationTest(type: Test) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
+	testSrcDirs = sourceSets.integrationTest.allJava.srcDirs as List
 }
 
 check.dependsOn integrationTest
