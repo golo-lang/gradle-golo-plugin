@@ -25,6 +25,8 @@
 
 
 
+
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
@@ -86,6 +88,8 @@ task integrationTest(type: Test) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
 	testSrcDirs = sourceSets.integrationTest.allJava.srcDirs as List
+
+	mustRunAfter test
 }
 
 check.dependsOn integrationTest
