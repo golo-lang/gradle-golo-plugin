@@ -20,6 +20,8 @@
 
 
 
+
+
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
@@ -56,7 +58,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 	protected void configureGoloConfiguration() {
 		buildFile << """
             dependencies {
-                golo 'org.golo-lang:golo:0-preview2'
+                golo 'org.golo-lang:golo:0-preview4'
             }
         """
 	}
