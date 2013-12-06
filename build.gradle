@@ -14,19 +14,6 @@
  * limitations under the License.
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
@@ -36,7 +23,7 @@ apply from: 'gradle/pom.gradle'
 apply from: 'gradle/clover.gradle'
 
 group = 'org.golo-lang'
-version = '0.1'
+version = '0.2'
 
 buildscript {
 	repositories {
@@ -68,7 +55,7 @@ sourceSets {
 }
 
 dependencies {
-	golo 'org.golo-lang:golo:0-preview2'
+	golo 'org.golo-lang:golo:0-preview9'
 
 	groovy localGroovy()
     compile gradleApi(), 'commons-io:commons-io:1.4'
