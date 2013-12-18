@@ -79,3 +79,7 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
+
+tasks.withType(CodeNarc) {
+	onlyIf { !project.hasProperty('ciBuild') }
+}
