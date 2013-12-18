@@ -41,8 +41,6 @@ class GoloPlugin implements Plugin<Project> {
     public static final String GOLO_PLUGIN_NAME = 'golo'
     public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
 
-	private static final String MAIN_GOLO_CLASS_NAME = 'fr.insalyon.citi.golo.cli.MainGolo'
-
 	Project project
     FileResolver fileResolver
     Configuration goloConfiguration
@@ -87,14 +85,13 @@ class GoloPlugin implements Plugin<Project> {
 
 	private void configureApplicationPlugin() {
 		def run = project.tasks.getByName(TASK_RUN_NAME)
-		run.conventionMapping.main = { MAIN_GOLO_CLASS_NAME }
+		run.conventionMapping.main = { "${pluginExtension.mainModule}".toString() }
 		run.doFirst {
 			ensureMainModuleConfigured()
-			args pluginExtension.mainModule
 		}
 
 		def startScripts = project.tasks.getByName(TASK_START_SCRIPTS_NAME)
-		startScripts.conventionMapping.mainClassName = { "$MAIN_GOLO_CLASS_NAME ${pluginExtension.mainModule}".toString() }
+		startScripts.conventionMapping.mainClassName = { "${pluginExtension.mainModule}".toString() }
 		startScripts.doFirst {
 			ensureMainModuleConfigured()
 		}
