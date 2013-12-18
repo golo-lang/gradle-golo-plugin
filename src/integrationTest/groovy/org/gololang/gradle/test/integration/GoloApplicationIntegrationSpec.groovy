@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
-
-
 package org.gololang.gradle.test.integration
 
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
