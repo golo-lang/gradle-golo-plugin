@@ -17,6 +17,8 @@ apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
 apply plugin: 'nexus'
+apply plugin: 'bintray'
+apply plugin: 'maven-publish'
 apply from: 'gradle/idea.gradle'
 apply from: 'gradle/pom.gradle'
 apply from: 'gradle/clover.gradle'
@@ -27,11 +29,44 @@ version = '0.2'
 buildscript {
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 
 	dependencies {
 		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
 		classpath 'org.gradle.api.plugins:gradle-clover-plugin:0.6.1'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+
+			artifact sourcesJar {
+				classifier 'sources'
+			}
+
+			artifact javadocJar {
+				classifier 'javadoc'
+			}
+		}
+	}
+}
+
+bintray {
+	user = bintrayUser
+	key = bintrayKey
+
+	publications = ['mavenJava'] // When uploading Maven-based publication files
+
+	pkg {
+		repo = 'gradle-plugins'
+		name = 'gradle-golo-plugin'
+		desc = 'This plugin provides a task type for compiling Golo code.'
+		licenses = ['Apache-2.0']
+		labels = ['gradle', 'golo-lang']
 	}
 }
 
