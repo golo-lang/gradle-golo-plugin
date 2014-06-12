@@ -56,8 +56,10 @@ publishing {
 }
 
 bintray {
-	user = bintrayUser
-	key = bintrayKey
+	if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
+		user = bintrayUser
+		key = bintrayKey
+	}
 
 	publications = ['mavenJava'] // When uploading Maven-based publication files
 
