@@ -77,5 +77,9 @@ ruleset {
 			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
 		}
 	}
-	ruleset('rulesets/unused.xml')
+	ruleset('rulesets/unused.xml') {
+		UnusedMethodParameter {
+			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
+		}
+	}
 }

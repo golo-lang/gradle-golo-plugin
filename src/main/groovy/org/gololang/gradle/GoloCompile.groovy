@@ -18,7 +18,9 @@ package org.gololang.gradle
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.tasks.compile.CompilationFailedException
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 import static org.apache.commons.io.FilenameUtils.removeExtension
 
@@ -32,6 +34,10 @@ class GoloCompile extends AbstractCompile {
 	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompilationException'
 	FileCollection goloClasspath
 
+	@TaskAction
+	protected void compile(IncrementalTaskInputs inputs) {
+		compile()
+	}
     protected void compile() {
 		ensureGoloConfigurationSpecified()
         def compiler = instantiateCompiler()
