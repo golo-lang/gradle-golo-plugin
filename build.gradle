@@ -89,7 +89,7 @@ sourceSets {
 }
 
 dependencies {
-	golo 'org.golo-lang:golo:0-preview10'
+	golo 'org.golo-lang:golo:0-preview12'
 
 	groovy localGroovy()
     compile gradleApi(), 'commons-io:commons-io:1.4'
