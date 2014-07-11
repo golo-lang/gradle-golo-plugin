@@ -49,7 +49,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 	protected void configureGoloConfiguration() {
 		buildFile << """
             dependencies {
-                golo 'org.golo-lang:golo:0-preview12'
+                golo 'org.golo-lang:golo:1.0.0'
             }
         """
 	}
