@@ -15,6 +15,8 @@
  */
 package org.gololang.gradle.test.integration
 
+import org.gradle.tooling.BuildException
+
 /**
  * @author Marcin Erdmann
  */
@@ -34,10 +36,10 @@ class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 
     void 'compileGolo is up to date for an empty source set'() {
         when:
-        runTasksSuccessfully(COMPILE_GOLO_TASK_NAME)
+		run(COMPILE_GOLO_TASK_NAME)
 
         then:
-        task(COMPILE_GOLO_TASK_NAME).state.isUpToDate()
+		upToDate(":$COMPILE_GOLO_TASK_NAME")
     }
 
     void 'compileGolo compiles files'() {
@@ -45,7 +47,7 @@ class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 		writeGoodFile()
 
         when:
-        runTasksSuccessfully(COMPILE_GOLO_TASK_NAME)
+        run(COMPILE_GOLO_TASK_NAME)
 
         then:
         fileExists('build/classes/main/hello/World.class')
@@ -56,9 +58,12 @@ class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 		writeBadFile()
 
 		when:
-		runTasksWithFailure(COMPILE_GOLO_TASK_NAME)
+		run(COMPILE_GOLO_TASK_NAME)
 
 		then:
+		thrown(BuildException)
+
+		and:
 		standardErrorOutput.contains('Compilation failed; see the compiler error output for details.')
 		standardErrorOutput.contains('In Golo module: helloworld')
 		standardErrorOutput =~ /(?s)Was expecting one of:.*"\{".*"->"/

@@ -15,49 +15,52 @@
  */
 package org.gololang.gradle.test.integration.framework
 
-import org.gradle.BuildResult
-import org.gradle.GradleLauncher
-import org.gradle.StartParameter
-import org.gradle.api.Task
-import org.gradle.api.execution.TaskExecutionListener
-import org.gradle.api.tasks.TaskState
-import org.gradle.initialization.DefaultGradleLauncher
-import org.gradle.logging.internal.StreamBackedStandardOutputListener
+import org.gradle.tooling.BuildLauncher
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ProjectConnection
+import org.gradle.tooling.model.GradleProject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
-import spock.util.mop.Use
 
 /**
  * @author Marcin Erdmann
  */
-@Use(UpToDateCategory)
 abstract class IntegrationSpec extends Specification {
     @Rule final TemporaryFolder dir = new TemporaryFolder()
 
-	private final StringBuilder errorOutputBuilder = new StringBuilder()
-    protected List<ExecutedTask> executedTasks = []
+	private final OutputStream standardError = new ByteArrayOutputStream()
+	private final OutputStream standardOutput = new ByteArrayOutputStream()
 
-    protected GradleLauncher launcher(String... args) {
-        StartParameter startParameter = GradleLauncher.createStartParameter(args)
-        startParameter.setProjectDir(dir.root)
-        DefaultGradleLauncher launcher = GradleLauncher.newInstance(startParameter)
-        launcher.addStandardErrorListener(new StreamBackedStandardOutputListener(errorOutputBuilder))
-        executedTasks.clear()
-        launcher.addListener(new TaskExecutionListener() {
-            void beforeExecute(Task task) {
-                executedTasks << new ExecutedTask(task: task)
-            }
+    protected GradleProject run(String... tasks) {
+		ProjectConnection connection = GradleConnector.newConnector().forProjectDirectory(dir.root).connect()
 
-            void afterExecute(Task task, TaskState taskState) {
-                executedTasks.last().state = taskState
-            }
-        })
-        launcher
-    }
+		try {
+			BuildLauncher builder = connection.newBuild()
+			builder.standardError = standardError
+			builder.standardOutput = standardOutput
+			builder.forTasks(tasks).run()
+			def model = connection.getModel(GradleProject)
+			return model
+		}
+		finally {
+			connection?.close()
+		}
+	}
+
+	protected List<String> getUpToDateTasks() {
+		standardOutput.toString().readLines().findResults {
+			def match = (it =~ /(:\S+?(:\S+?)*)\s+UP-TO-DATE/)
+			match ? match[0][1] : null
+		}
+	}
+
+	boolean upToDate(String task) {
+		task in upToDateTasks
+	}
 
 	protected String getStandardErrorOutput() {
-		errorOutputBuilder.toString()
+		standardError.toString()
 	}
 
     protected File getBuildFile() {
@@ -82,32 +85,4 @@ abstract class IntegrationSpec extends Specification {
     protected boolean fileExists(String path) {
         new File(dir.root, path).exists()
     }
-
-    protected ExecutedTask task(String name) {
-        executedTasks.find { it.task.name == name }
-    }
-
-    protected Collection<ExecutedTask> tasks(String... names) {
-        def tasks = executedTasks.findAll { it.task.name in names }
-        assert tasks.size() == names.size()
-        tasks
-    }
-
-    protected BuildResult runTasksSuccessfully(String... tasks) {
-        BuildResult result = runTasks(tasks)
-        if (result.failure) {
-            throw result.failure
-        }
-        result
-    }
-
-	protected BuildResult runTasksWithFailure(String... tasks) {
-		BuildResult result = runTasks(tasks)
-		assert result.failure
-		result
-	}
-
-	protected BuildResult runTasks(String... tasks) {
-		launcher(tasks).run()
-	}
 }

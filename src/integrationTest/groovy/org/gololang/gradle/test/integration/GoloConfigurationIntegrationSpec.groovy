@@ -15,6 +15,7 @@
  */
 package org.gololang.gradle.test.integration
 
+import org.gradle.tooling.BuildException
 import spock.lang.Unroll
 
 import static org.gradle.api.plugins.ApplicationPlugin.TASK_RUN_NAME
@@ -30,9 +31,12 @@ class GoloConfigurationIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void 'an informative message is presented if golo dependency is not specified'() {
 		when:
-		runTasksWithFailure(COMPILE_GOLO_TASK_NAME)
+		run(COMPILE_GOLO_TASK_NAME)
 
 		then:
+		thrown(BuildException)
+
+		and:
 		standardErrorOutput.contains('You must assign a Golo library to the "golo" configuration.')
 	}
 
@@ -42,9 +46,12 @@ class GoloConfigurationIntegrationSpec extends GoloPluginIntegrationSpec {
 		configureGoloConfiguration()
 
 		when:
-		runTasksWithFailure(task)
+		run(task)
 
 		then:
+		thrown(BuildException)
+
+		and:
 		standardErrorOutput.contains('You must specify the mainModule using golo extension.')
 
 		where:

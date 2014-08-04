@@ -24,7 +24,7 @@ apply from: 'gradle/pom.gradle'
 apply from: 'gradle/clover.gradle'
 
 group = 'org.golo-lang'
-version = '0.3'
+version = '0.4-SNAPSHOT'
 
 buildscript {
 	repositories {
@@ -33,13 +33,13 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1'
 		classpath 'org.gradle.api.plugins:gradle-clover-plugin:0.6.1'
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
 	}
 }
 
-publishing {
+/*publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
@@ -70,6 +70,10 @@ bintray {
 		licenses = ['Apache-2.0']
 		labels = ['gradle', 'golo-lang']
 	}
+}*/
+
+nexus {
+	sign = !version.endsWith("SNAPSHOT")
 }
 
 repositories {
@@ -93,7 +97,7 @@ sourceSets {
 dependencies {
 	golo 'org.golo-lang:golo:1.0.0'
 
-	groovy localGroovy()
+	compile localGroovy()
     compile gradleApi(), 'commons-io:commons-io:1.4'
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 
@@ -108,15 +112,27 @@ task archiveReports(type: Zip) {
 }
 
 task integrationTest(type: Test) {
+	dependsOn install
+
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
 	testSrcDirs = sourceSets.integrationTest.allJava.srcDirs as List
 
 	mustRunAfter test
+
+	systemProperty 'localRepo.location', "${buildDir.absolutePath}/localRepo"
 }
 
 check.dependsOn integrationTest
 
 tasks.withType(CodeNarc) {
 	onlyIf { !project.hasProperty('ciBuild') }
+}
+
+install {
+	repositories {
+		mavenDeployer {
+			repository(url: "file://${buildDir.absolutePath}/localRepo")
+		}
+	}
 }

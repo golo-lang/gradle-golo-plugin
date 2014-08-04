@@ -24,14 +24,31 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 
 	protected static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
 
+	protected String getLocalRepoLocation() {
+		System.properties['localRepo.location']
+	}
+
 	void setup() {
 		buildFile << """
-            def GoloPlugin = project.class.classLoader.loadClass('org.gololang.gradle.GoloPlugin')
+            apply plugin: 'golo'
 
-            apply plugin: GoloPlugin
+            buildscript {
+            	repositories {
+            		maven {
+            			url "$localRepoLocation"
+						mavenCentral()
+					}
+				}
+				dependencies {
+					classpath 'org.golo-lang:gradle-golo-plugin:latest.integration'
+				}
+				configurations.all {
+    				resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+				}
+            }
 
             repositories {
-                mavenCentral()
+            	mavenCentral()
             }
         """
 	}

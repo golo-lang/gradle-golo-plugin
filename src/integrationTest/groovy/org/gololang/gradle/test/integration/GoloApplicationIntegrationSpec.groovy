@@ -43,7 +43,7 @@ class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void 'run executes main module'() {
 		when:
-		runTasksSuccessfully(TASK_RUN_NAME)
+		run(TASK_RUN_NAME)
 
 		then:
 		fileExists('createdByGolo')
@@ -64,7 +64,7 @@ class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 		"""
 
 		when:
-		runTasksSuccessfully('runInstalledApp')
+		run('runInstalledApp')
 
 		then:
 		fileExists('installed/bin/createdByGolo')
