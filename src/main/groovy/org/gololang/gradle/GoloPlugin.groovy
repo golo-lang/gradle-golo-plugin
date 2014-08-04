@@ -73,7 +73,7 @@ class GoloPlugin implements Plugin<Project> {
 
 			def compileTaskName = sourceSet.getCompileTaskName(GOLO_PLUGIN_NAME)
 
-			def goloCompile = project.tasks.add(compileTaskName, GoloCompile)
+			def goloCompile = project.tasks.create(compileTaskName, GoloCompile)
 			javaBasePlugin.configureForSourceSet(sourceSet, goloCompile)
 			goloCompile.dependsOn(sourceSet.compileJavaTaskName)
 			goloCompile.setDescription("Compiles the ${sourceSet.name} Groovy source.")

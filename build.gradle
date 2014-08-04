@@ -98,7 +98,9 @@ dependencies {
 
 	compile localGroovy()
     compile gradleApi(), 'commons-io:commons-io:1.4'
-    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
+		exclude module: 'groovy-all'
+	}
 
 	codenarc 'org.codenarc:CodeNarc:0.18.1'
 }
