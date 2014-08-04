@@ -21,7 +21,6 @@ apply plugin: 'bintray'
 apply plugin: 'maven-publish'
 apply from: 'gradle/idea.gradle'
 apply from: 'gradle/pom.gradle'
-apply from: 'gradle/clover.gradle'
 
 group = 'org.golo-lang'
 version = '0.4-SNAPSHOT'
