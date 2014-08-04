@@ -25,19 +25,19 @@ import static org.gradle.util.ConfigureUtil.configure
  * @author Marcin Erdmann
  */
 class GoloSourceSet {
-    private final SourceDirectorySet golo
+	private final SourceDirectorySet golo
 
-    GoloSourceSet(String displayName, FileResolver fileResolver) {
-        golo = new DefaultSourceDirectorySet(String.format('%s Golo source', displayName), fileResolver)
-        golo.filter.include('**/*.golo')
-    }
+	GoloSourceSet(String displayName, FileResolver fileResolver) {
+		golo = new DefaultSourceDirectorySet(String.format('%s Golo source', displayName), fileResolver)
+		golo.filter.include('**/*.golo')
+	}
 
-    SourceDirectorySet getGolo() {
-        golo
-    }
+	SourceDirectorySet getGolo() {
+		golo
+	}
 
-    GoloSourceSet golo(Closure closure) {
-        configure(closure, golo)
-        this
-    }
+	GoloSourceSet golo(Closure closure) {
+		configure(closure, golo)
+		this
+	}
 }

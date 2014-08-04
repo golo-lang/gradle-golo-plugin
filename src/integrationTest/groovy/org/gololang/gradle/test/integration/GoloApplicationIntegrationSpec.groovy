@@ -31,14 +31,14 @@ class GoloApplicationIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	private writeMainModuleFile() {
 		file('src/main/golo/helloworld.golo') << """
-            module hello.World
+			module hello.World
 
-            import java.io.File
+			import java.io.File
 
-            function main = |args| {
-                File("createdByGolo"): mkdir()
-            }
-        """
+			function main = |args| {
+				File("createdByGolo"): mkdir()
+			}
+		"""
 	}
 
 	void 'run executes main module'() {

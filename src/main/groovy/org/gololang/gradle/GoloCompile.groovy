@@ -29,8 +29,8 @@ import static org.apache.commons.io.FilenameUtils.removeExtension
  */
 class GoloCompile extends AbstractCompile {
 
-    private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'
-    public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
+	private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'
+	public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
 	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompilationException'
 	FileCollection goloClasspath
 
@@ -38,13 +38,14 @@ class GoloCompile extends AbstractCompile {
 	protected void compile(IncrementalTaskInputs inputs) {
 		compile()
 	}
-    protected void compile() {
+
+	protected void compile() {
 		ensureGoloConfigurationSpecified()
-        def compiler = instantiateCompiler()
-        source.files.each { file ->
-            file.withInputStream { stream ->
+		def compiler = instantiateCompiler()
+		source.files.each { file ->
+			file.withInputStream { stream ->
 				try {
-                	compiler.compileTo(removeExtension(file.name), stream, destinationDir)
+					compiler.compileTo(removeExtension(file.name), stream, destinationDir)
 				} catch (Throwable e) {
 					if (e.class.name == COMPILATION_EXCEPTION_CLASS_NAME) {
 						System.err.println()
@@ -54,9 +55,9 @@ class GoloCompile extends AbstractCompile {
 					}
 					throw e
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 
 	protected void ensureGoloConfigurationSpecified() {
 		if (getGoloClasspath().empty) {
@@ -65,13 +66,13 @@ class GoloCompile extends AbstractCompile {
 	}
 
 	protected instantiateCompiler() {
-        def goloCompilerClass = loadGoloCompilerClass()
-        goloCompilerClass.getConstructor().newInstance()
-    }
+		def goloCompilerClass = loadGoloCompilerClass()
+		goloCompilerClass.getConstructor().newInstance()
+	}
 
-    protected Class loadGoloCompilerClass() {
-        def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
-        def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().classLoader)
+	protected Class loadGoloCompilerClass() {
+		def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
+		def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().classLoader)
 		goloClassLoader.loadClass(GOLO_COMPILER_CLASS_NAME, true)
-    }
+	}
 }

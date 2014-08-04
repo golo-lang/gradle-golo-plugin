@@ -27,12 +27,13 @@ import spock.lang.Specification
  * @author Marcin Erdmann
  */
 abstract class IntegrationSpec extends Specification {
-    @Rule final TemporaryFolder dir = new TemporaryFolder()
+	@Rule
+	final TemporaryFolder dir = new TemporaryFolder()
 
 	private final OutputStream standardError = new ByteArrayOutputStream()
 	private final OutputStream standardOutput = new ByteArrayOutputStream()
 
-    protected GradleProject run(String... tasks) {
+	protected GradleProject run(String... tasks) {
 		ProjectConnection connection = GradleConnector.newConnector().forProjectDirectory(dir.root).connect()
 
 		try {
@@ -63,26 +64,26 @@ abstract class IntegrationSpec extends Specification {
 		standardError.toString()
 	}
 
-    protected File getBuildFile() {
-        file('build.gradle')
-    }
+	protected File getBuildFile() {
+		file('build.gradle')
+	}
 
-    protected File directory(String path) {
-        new File(dir.root, path).with {
-            mkdirs()
-            it
-        }
-    }
+	protected File directory(String path) {
+		new File(dir.root, path).with {
+			mkdirs()
+			it
+		}
+	}
 
-    protected File file(String path) {
-        def splitted = path.split('/')
-        def directory = splitted.size() > 1 ? directory(splitted[0..-2].join('/')) : dir.root
-        def file = new File(directory, splitted[-1])
-        file.createNewFile()
-        file
-    }
+	protected File file(String path) {
+		def splitted = path.split('/')
+		def directory = splitted.size() > 1 ? directory(splitted[0..-2].join('/')) : dir.root
+		def file = new File(directory, splitted[-1])
+		file.createNewFile()
+		file
+	}
 
-    protected boolean fileExists(String path) {
-        new File(dir.root, path).exists()
-    }
+	protected boolean fileExists(String path) {
+		new File(dir.root, path).exists()
+	}
 }

@@ -38,50 +38,50 @@ import static org.gradle.api.plugins.JavaPlugin.RUNTIME_CONFIGURATION_NAME
  */
 class GoloPlugin implements Plugin<Project> {
 
-    public static final String GOLO_PLUGIN_NAME = 'golo'
-    public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
+	public static final String GOLO_PLUGIN_NAME = 'golo'
+	public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
 
 	Project project
-    FileResolver fileResolver
-    Configuration goloConfiguration
-    GoloPluginExtension pluginExtension
+	FileResolver fileResolver
+	Configuration goloConfiguration
+	GoloPluginExtension pluginExtension
 
-    @Inject
-    GoloPlugin(FileResolver fileResolver) {
-        this.fileResolver = fileResolver
-    }
+	@Inject
+	GoloPlugin(FileResolver fileResolver) {
+		this.fileResolver = fileResolver
+	}
 
-    @Override
-    void apply(Project project) {
-        this.project = project
-        project.plugins.apply(JavaPlugin)
+	@Override
+	void apply(Project project) {
+		this.project = project
+		project.plugins.apply(JavaPlugin)
 		project.plugins.apply(ApplicationPlugin)
 
-        configureSourceSetDefaults(project.plugins.getPlugin(JavaBasePlugin))
+		configureSourceSetDefaults(project.plugins.getPlugin(JavaBasePlugin))
 		configureGoloConfigurationAndClasspath()
 
 		configureApplicationPlugin()
 		addGoloPluginExtension()
-    }
+	}
 
-    private void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
-        project.convention.getPlugin(JavaPluginConvention).sourceSets.all { sourceSet ->
-            def goloSourceSet = new GoloSourceSet(sourceSet.displayName, fileResolver)
-            new DslObject(sourceSet).convention.plugins.put(GOLO_PLUGIN_NAME, goloSourceSet)
+	private void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
+		project.convention.getPlugin(JavaPluginConvention).sourceSets.all { sourceSet ->
+			def goloSourceSet = new GoloSourceSet(sourceSet.displayName, fileResolver)
+			new DslObject(sourceSet).convention.plugins.put(GOLO_PLUGIN_NAME, goloSourceSet)
 
-            goloSourceSet.golo.srcDir("src/${sourceSet.name}/golo")
+			goloSourceSet.golo.srcDir("src/${sourceSet.name}/golo")
 
-            def compileTaskName = sourceSet.getCompileTaskName(GOLO_PLUGIN_NAME)
+			def compileTaskName = sourceSet.getCompileTaskName(GOLO_PLUGIN_NAME)
 
-            def goloCompile = project.tasks.add(compileTaskName, GoloCompile)
-            javaBasePlugin.configureForSourceSet(sourceSet, goloCompile)
-            goloCompile.dependsOn(sourceSet.compileJavaTaskName)
-            goloCompile.setDescription("Compiles the ${sourceSet.name} Groovy source.")
-            goloCompile.setSource(goloSourceSet.golo)
+			def goloCompile = project.tasks.add(compileTaskName, GoloCompile)
+			javaBasePlugin.configureForSourceSet(sourceSet, goloCompile)
+			goloCompile.dependsOn(sourceSet.compileJavaTaskName)
+			goloCompile.setDescription("Compiles the ${sourceSet.name} Groovy source.")
+			goloCompile.setSource(goloSourceSet.golo)
 
-            project.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
-        }
-    }
+			project.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
+		}
+	}
 
 	private void configureApplicationPlugin() {
 		def run = project.tasks.getByName(TASK_RUN_NAME)
@@ -115,7 +115,7 @@ class GoloPlugin implements Plugin<Project> {
 		}
 	}
 
-    private void addGoloPluginExtension() {
-        pluginExtension = project.extensions.create(GOLO_PLUGIN_NAME, GoloPluginExtension)
-    }
+	private void addGoloPluginExtension() {
+		pluginExtension = project.extensions.create(GOLO_PLUGIN_NAME, GoloPluginExtension)
+	}
 }

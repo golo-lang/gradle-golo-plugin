@@ -24,34 +24,34 @@ class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 
 	void setup() {
 		configureGoloConfiguration()
-    }
+	}
 
 	private File writeBadFile() {
 		file('src/main/golo/helloworld.golo') << """
-            module hello.World
+			module hello.World
 
-            function main = |args|
-        """
+			function main = |args|
+		"""
 	}
 
-    void 'compileGolo is up to date for an empty source set'() {
-        when:
+	void 'compileGolo is up to date for an empty source set'() {
+		when:
 		run(COMPILE_GOLO_TASK_NAME)
 
-        then:
+		then:
 		upToDate(":$COMPILE_GOLO_TASK_NAME")
-    }
+	}
 
-    void 'compileGolo compiles files'() {
-        given:
+	void 'compileGolo compiles files'() {
+		given:
 		writeGoodFile()
 
-        when:
-        run(COMPILE_GOLO_TASK_NAME)
+		when:
+		run(COMPILE_GOLO_TASK_NAME)
 
-        then:
-        fileExists('build/classes/main/hello/World.class')
-    }
+		then:
+		fileExists('build/classes/main/hello/World.class')
+	}
 
 	void 'compileGolo prints out messages on compilation failure'() {
 		given:

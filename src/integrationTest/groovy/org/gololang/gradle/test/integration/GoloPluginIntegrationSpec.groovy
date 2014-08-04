@@ -30,12 +30,12 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 
 	void setup() {
 		buildFile << """
-            apply plugin: 'golo'
+			apply plugin: 'golo'
 
-            buildscript {
-            	repositories {
-            		maven {
-            			url "$localRepoLocation"
+			buildscript {
+				repositories {
+					maven {
+						url "$localRepoLocation"
 						mavenCentral()
 					}
 				}
@@ -43,31 +43,31 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 					classpath 'org.golo-lang:gradle-golo-plugin:latest.integration'
 				}
 				configurations.all {
-    				resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+					resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
 				}
-            }
+			}
 
-            repositories {
-            	mavenCentral()
-            }
-        """
+			repositories {
+				mavenCentral()
+			}
+		"""
 	}
 
 	protected File writeGoodFile() {
 		file('src/main/golo/helloworld.golo') << """
-            module hello.World
+			module hello.World
 
-            function main = |args| {
-                println("Hello world!")
-            }
-        """
+			function main = |args| {
+				println("Hello world!")
+			}
+		"""
 	}
 
 	protected void configureGoloConfiguration() {
 		buildFile << """
-            dependencies {
-                golo 'org.golo-lang:golo:1.0.0'
-            }
-        """
+			dependencies {
+				golo 'org.golo-lang:golo:1.0.0'
+			}
+		"""
 	}
 }

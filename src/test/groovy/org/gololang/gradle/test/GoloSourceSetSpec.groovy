@@ -24,27 +24,27 @@ import spock.lang.Specification
  * @author Marcin Erdmann
  */
 class GoloSourceSetSpec extends Specification {
-    def sourceSet = new GoloSourceSet('<display-name>', [resolve: { it as File }] as FileResolver)
+	def sourceSet = new GoloSourceSet('<display-name>', [resolve: { it as File }] as FileResolver)
 
-    void 'default values'() {
-        expect:
-        with sourceSet, {
-            golo in DefaultSourceDirectorySet
-            !golo.iterator().hasNext()
-            golo.name == '<display-name> Golo source'
-            golo.filter.includes == ['**/*.golo'] as Set
-            golo.filter.excludes == [] as Set
-        }
-    }
+	void 'default values'() {
+		expect:
+		with sourceSet, {
+			golo in DefaultSourceDirectorySet
+			!golo.iterator().hasNext()
+			golo.name == '<display-name> Golo source'
+			golo.filter.includes == ['**/*.golo'] as Set
+			golo.filter.excludes == [] as Set
+		}
+	}
 
-    void 'can configure source set'() {
+	void 'can configure source set'() {
 		given:
 		def mainGoloSourceDir = 'src/golo'
 
-        when:
-        sourceSet.golo { srcDir mainGoloSourceDir }
+		when:
+		sourceSet.golo { srcDir mainGoloSourceDir }
 
-        then:
-        sourceSet.golo.srcDirs == [new File(mainGoloSourceDir).canonicalFile] as Set
-    }
+		then:
+		sourceSet.golo.srcDirs == [new File(mainGoloSourceDir).canonicalFile] as Set
+	}
 }
