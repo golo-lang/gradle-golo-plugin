@@ -21,7 +21,7 @@ apply from: 'gradle/idea.gradle'
 apply from: 'gradle/pom.gradle'
 
 group = 'org.golo-lang'
-version = '0.4-SNAPSHOT'
+version = '0.4'
 
 buildscript {
 	repositories {

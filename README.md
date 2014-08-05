@@ -16,7 +16,7 @@ You also need to add the plugin JAR to the classpath. The easiest way is to pull
 		}
 
 		dependencies {
-			classpath 'org.golo-lang:gradle-golo-plugin:0.3'
+			classpath 'org.golo-lang:gradle-golo-plugin:0.4'
 		}
 	}
 
