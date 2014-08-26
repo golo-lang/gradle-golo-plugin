@@ -71,7 +71,11 @@ ruleset {
 		}
 	}
 	ruleset('rulesets/serialization.xml')
-	ruleset('rulesets/size.xml')
+	ruleset('rulesets/size.xml') {
+		CrapMetric {
+			enabled = false
+		}
+	}
 	ruleset('rulesets/unnecessary.xml') {
 		UnnecessaryGetter {
 			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
