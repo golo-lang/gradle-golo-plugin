@@ -4,31 +4,17 @@ The plugin provides a task type for compiling [Golo](http://golo-lang.org/) code
 
 ## Usage
 
-To use the plugin apply it to your project in your build script:
+To use the plugin you will first need to apply it to your project. Please refer to [the plugin's page in Gradle Plugin Portal](http://plugins.gradle.org/plugin/org.golo-lang.golo) for instructions on how to do it in the Gradle version you're using.
 
-	apply plugin: 'golo'
-
-You also need to add the plugin JAR to the classpath. The easiest way is to pull the artifact from Maven Central Repository:
-
-	buildscript {
-		repositories {
-			mavenCentral()
-		}
-
-		dependencies {
-			classpath 'org.golo-lang:gradle-golo-plugin:0.4'
-		}
-	}
-
-Finally you have to specify which version of Golo you wish to use to compile your project. You can do it using the `golo` configuration:
+You will also have to specify which version of Golo you wish to use to compile your project. You can do it using the `golo` configuration:
 
 	repositories {
-        mavenCentral()
-    }
+		mavenCentral()
+	}
 
-    dependencies {
-        golo 'org.golo-lang:golo:1.0.0'
-    }
+	dependencies {
+		golo 'org.golo-lang:golo:1.0.0'
+	}
 
 ## Project layout
 
