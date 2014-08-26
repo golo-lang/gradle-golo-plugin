@@ -24,7 +24,7 @@ plugins {
 apply from: 'gradle/idea.gradle'
 
 group = 'org.golo-lang'
-version = '0.5'
+version = '0.6-SNAPSHOT'
 
 ext {
 	localRepoDir = new File(buildDir, 'localRepo')
