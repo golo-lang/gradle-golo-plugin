@@ -25,12 +25,16 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 	protected static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
 
 	protected String getLocalRepoLocation() {
-		System.properties['localRepo.location']
+		def properties = new Properties()
+		def testConfigResourcePath = '/test-config.properties'
+		def testConfigResourceStream = getClass().getResourceAsStream(testConfigResourcePath)
+		properties.load(testConfigResourceStream)
+		properties.getProperty('localRepo.location')
 	}
 
 	void setup() {
 		buildFile << """
-			apply plugin: 'golo'
+			apply plugin: 'org.golo-lang.golo'
 
 			buildscript {
 				repositories {

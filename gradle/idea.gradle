@@ -39,26 +39,9 @@ idea {
 			}
 		}
 	}
-	workspace {
-		iws {
-			withXml { provider ->
-				def node = provider.asNode()
-				def runManager = node.component.find { it.'@name' == 'RunManager' }
-				def defaultJUnitConf = runManager.configuration.find { it.'@default' == 'true' && it.'@type' == 'JUnit' }
-				def vmParametersOption = defaultJUnitConf.option.find { it.'@name' == 'VM_PARAMETERS' }
-				vmParametersOption.'@value' = "-DlocalRepo.location=${buildDir.absolutePath}/localRepo"
-			}
-		}
-    }
 }
 
-install {
-	repositories {
-		mavenDeployer {
-			repository(url: "file://${rootProject.buildDir.absolutePath}/localrepo")
-		}
-	}
-}
+ideaModule.dependsOn install
 
 project.afterEvaluate {
 	idea.module {

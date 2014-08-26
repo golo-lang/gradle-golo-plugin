@@ -14,54 +14,55 @@
  * limitations under the License.
  */
 apply plugin: 'idea'
+apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'codenarc'
-apply plugin: 'nexus'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply from: 'gradle/idea.gradle'
-apply from: 'gradle/pom.gradle'
 
 group = 'org.golo-lang'
 version = '0.5-SNAPSHOT'
 
 buildscript {
 	repositories {
-		mavenCentral()
 		jcenter()
 	}
 
 	dependencies {
-		classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
 	}
 }
 
-nexus {
-	sign = !version.endsWith("SNAPSHOT")
+ext {
+	localRepoDir = new File(buildDir, 'localRepo')
+	generatedTestResourcesDir = new File(buildDir, 'testResources')
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-    golo
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+	golo
 }
 
 sourceSets {
-    main.compileClasspath += configurations.golo
-    integrationTest {
-        compileClasspath += main.output
-        runtimeClasspath += main.output
-    }
+	main.compileClasspath += configurations.golo
+	integrationTest {
+		compileClasspath += main.output
+		runtimeClasspath += main.output
+	}
 }
 
 dependencies {
 	golo 'org.golo-lang:golo:1.0.0'
 
 	compile localGroovy()
-    compile gradleApi(), 'commons-io:commons-io:1.4'
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
+	compile gradleApi(), 'commons-io:commons-io:1.4'
+	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
 		exclude module: 'groovy-all'
 	}
 
@@ -71,15 +72,44 @@ dependencies {
 codenarc.configFile = file('gradle/config/codenarc/rulesets.groovy')
 
 task archiveReports(type: Zip) {
-    from reporting.baseDir
-    archiveName 'reports.zip'
+	from reporting.baseDir
+	archiveName 'reports.zip'
 }
+
+class WriteTestConfig extends DefaultTask {
+
+	@OutputFile
+	File getTestConfigPropertiesFile() {
+		new File(project.generatedTestResourcesDir, 'test-config.properties')
+	}
+
+	@Input
+	Properties getTestConfig() {
+		def testConfigProperties = new Properties()
+
+		testConfigProperties["localRepo.location"] = project.localRepoDir.absolutePath
+		testConfigProperties
+	}
+
+	@TaskAction
+	def generate() {
+		testConfigPropertiesFile.withOutputStream { testConfig.store(it, null) }
+	}
+}
+
+task writeTestConfig(type: WriteTestConfig)
+
+
+sourceSets.integrationTest.resources.srcDir generatedTestResourcesDir
+
+processIntegrationTestResources.dependsOn writeTestConfig
+ideaModule.dependsOn writeTestConfig
 
 task integrationTest(type: Test) {
 	dependsOn install
 
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
+	testClassesDir = sourceSets.integrationTest.output.classesDir
+	classpath = sourceSets.integrationTest.runtimeClasspath
 	testSrcDirs = sourceSets.integrationTest.allJava.srcDirs as List
 
 	mustRunAfter test
@@ -96,7 +126,83 @@ tasks.withType(CodeNarc) {
 install {
 	repositories {
 		mavenDeployer {
-			repository(url: "file://${buildDir.absolutePath}/localRepo")
+			repository(url: localRepoDir.toURI())
+		}
+	}
+}
+
+task javadocJar(type: Jar) {
+	from javadoc
+	classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+def pomConfig = {
+	scm {
+		url 'https://github.com/golo-lang/gradle-golo-plugin'
+		connection 'scm:git://github.com/golo-lang/gradle-golo-plugin.git'
+		developerConnection 'scm:git@github.com:golo-lang/gradle-golo-plugin.git'
+	}
+
+	licenses {
+		license {
+			name 'The Apache Software License, Version 2.0'
+			url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			distribution 'repo'
+		}
+	}
+
+	developers {
+		developer {
+			id 'erdi'
+			name 'Marcin Erdmann'
+			email 'marcin.erdmann@proxerd.pl'
+		}
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+
+			artifact sourcesJar
+			artifact javadocJar
+
+			pom.withXml {
+				def root = asNode()
+				root.appendNode('description', 'Gradle Golo plugin')
+				root.appendNode('url', 'https://github.com/golo-lang/gradle-golo-plugin')
+				root.appendNode('inceptionYear', '2013')
+				root.children().last() + pomConfig
+			}
+		}
+	}
+}
+
+bintray {
+	if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
+		user = bintrayUser
+		key = bintrayKey
+	}
+
+	publications = ['mavenJava']
+
+	pkg {
+		userOrg = 'golo-lang'
+		repo = 'gradle-golo-plugin'
+		name = 'org.golo-lang:gradle-golo-plugin'
+		desc = 'This plugin provides a task type for compiling Golo code.'
+		licenses = ['Apache-2.0']
+		labels = ['golo-lang']
+		version {
+			name = "${project.version}"
+			vcsTag = "v${project.version}"
+			attributes = ['gradle-plugin': 'org.golo-lang.golo:org.golo-lang:gradle-golo-plugin']
 		}
 	}
 }
