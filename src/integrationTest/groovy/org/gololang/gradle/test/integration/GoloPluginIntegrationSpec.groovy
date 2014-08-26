@@ -16,6 +16,7 @@
 package org.gololang.gradle.test.integration
 
 import org.gololang.gradle.test.integration.framework.IntegrationSpec
+import org.gololang.gradle.test.integration.framework.TestConfig
 
 /**
  * @author Marcin Erdmann
@@ -24,13 +25,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 
 	protected static final String COMPILE_GOLO_TASK_NAME = 'compileGolo'
 
-	protected String getLocalRepoLocation() {
-		def properties = new Properties()
-		def testConfigResourcePath = '/test-config.properties'
-		def testConfigResourceStream = getClass().getResourceAsStream(testConfigResourcePath)
-		properties.load(testConfigResourceStream)
-		properties.getProperty('localRepo.location')
-	}
+	private final TestConfig testConfig = new TestConfig()
 
 	void setup() {
 		buildFile << """
@@ -39,7 +34,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 			buildscript {
 				repositories {
 					maven {
-						url "$localRepoLocation"
+						url "${testConfig.localRepoUri}"
 						mavenCentral()
 					}
 				}
@@ -70,7 +65,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 	protected void configureGoloConfiguration() {
 		buildFile << """
 			dependencies {
-				golo 'org.golo-lang:golo:1.0.0'
+				golo 'org.golo-lang:golo:${testConfig.goloVersion()}'
 			}
 		"""
 	}
