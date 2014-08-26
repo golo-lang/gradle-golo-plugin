@@ -60,7 +60,7 @@ dependencies {
 		exclude module: 'groovy-all'
 	}
 
-	codenarc 'org.codenarc:CodeNarc:0.18.1'
+	codenarc 'org.codenarc:CodeNarc:0.21'
 }
 
 codenarc.configFile = file('gradle/config/codenarc/rulesets.groovy')

@@ -41,6 +41,12 @@ ruleset {
 		LineLength {
 			length = 125
 		}
+		ClassJavadoc {
+			enabled = false
+		}
+		SpaceAroundMapEntryColon {
+			characterAfterColonRegex = /\s/
+		}
 	}
 	ruleset('rulesets/generic.xml')
 	ruleset('rulesets/grails.xml')
