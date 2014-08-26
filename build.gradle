@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'idea'
-apply plugin: 'maven'
-apply plugin: 'groovy'
-apply plugin: 'codenarc'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+plugins {
+	id 'idea'
+	id 'maven'
+	id 'groovy'
+	id 'codenarc'
+	id 'maven-publish'
+	id 'com.jfrog.bintray' version '0.5'
+}
 apply from: 'gradle/idea.gradle'
 
 group = 'org.golo-lang'
 version = '0.5-SNAPSHOT'
-
-buildscript {
-	repositories {
-		jcenter()
-	}
-
-	dependencies {
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
-	}
-}
 
 ext {
 	localRepoDir = new File(buildDir, 'localRepo')
