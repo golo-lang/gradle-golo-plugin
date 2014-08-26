@@ -48,7 +48,12 @@ ruleset {
 			characterAfterColonRegex = /\s/
 		}
 	}
-	ruleset('rulesets/generic.xml')
+	ruleset('rulesets/generic.xml') {
+		RequiredString {
+			string = 'Copyright'
+			violationMessage = 'Copyright header not found'
+		}
+	}
 	ruleset('rulesets/grails.xml')
 	ruleset('rulesets/groovyism.xml')
 	ruleset('rulesets/imports.xml') {
