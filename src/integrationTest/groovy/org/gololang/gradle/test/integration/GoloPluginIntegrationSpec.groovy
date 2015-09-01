@@ -35,7 +35,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 				repositories {
 					maven {
 						url "${testConfig.localRepoUri}"
-						mavenCentral()
+						jcenter()
 					}
 				}
 				dependencies {
@@ -47,7 +47,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 			}
 
 			repositories {
-				mavenCentral()
+				jcenter()
 			}
 		"""
 	}
@@ -65,7 +65,7 @@ abstract class GoloPluginIntegrationSpec extends IntegrationSpec {
 	protected void configureGoloConfiguration() {
 		buildFile << """
 			dependencies {
-				golo 'org.golo-lang:golo:${testConfig.goloVersion()}'
+				golo 'org.eclipse.golo:golo:${testConfig.goloVersion()}'
 			}
 		"""
 	}
