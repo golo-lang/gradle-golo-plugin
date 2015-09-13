@@ -18,13 +18,24 @@ package org.gololang.gradle.test
 import org.gololang.gradle.GoloSourceSet
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.internal.file.FileResolver
+import org.gradle.internal.nativeintegration.services.NativeServices
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 /**
  * @author Marcin Erdmann
  */
 class GoloSourceSetSpec extends Specification {
+
+	@Rule
+	TemporaryFolder nativeServicesHome
+
 	def sourceSet = new GoloSourceSet('<display-name>', [resolve: { it as File }] as FileResolver)
+
+	void setup() {
+		NativeServices.initialize(nativeServicesHome.root)
+	}
 
 	void 'default values'() {
 		expect:
