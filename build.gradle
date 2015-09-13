@@ -31,6 +31,8 @@ ext {
 	generatedTestResourcesDir = new File(buildDir, 'testResources')
 
 	goloVersion = "3.0.0-incubation-M1"
+
+	ci = project.hasProperty('ciBuild')
 }
 
 repositories {
@@ -113,7 +115,7 @@ task integrationTest(type: Test) {
 check.dependsOn integrationTest
 
 tasks.withType(CodeNarc) {
-	onlyIf { !project.hasProperty('ciBuild') }
+	onlyIf { !ci }
 }
 
 install {
@@ -197,6 +199,12 @@ bintray {
 			vcsTag = "v${project.version}"
 			attributes = ['gradle-plugin': 'org.golo-lang.golo:org.golo-lang:gradle-golo-plugin']
 		}
+	}
+}
+
+if (ci) {
+	tasks.withType(Test) {
+		it.finalizedBy archiveReports
 	}
 }
 
