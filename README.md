@@ -9,11 +9,11 @@ To use the plugin you will first need to apply it to your project. Please refer 
 You will also have to specify which version of Golo you wish to use to compile your project. You can do it using the `golo` configuration:
 
 	repositories {
-		mavenCentral()
+		jcenter()
 	}
 
 	dependencies {
-		golo 'org.golo-lang:golo:1.0.0'
+		golo 'org.eclipse.golo:golo:3.0.0-incubation-M2'
 	}
 
 ## Project layout
