@@ -29,9 +29,9 @@ import static org.apache.commons.io.FilenameUtils.removeExtension
  */
 class GoloCompile extends AbstractCompile {
 
-	private static final String GOLO_COMPILER_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompiler'
+	private static final String GOLO_COMPILER_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompiler'
 	public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
-	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'fr.insalyon.citi.golo.compiler.GoloCompilationException'
+	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompilationException'
 	FileCollection goloClasspath
 
 	@TaskAction
