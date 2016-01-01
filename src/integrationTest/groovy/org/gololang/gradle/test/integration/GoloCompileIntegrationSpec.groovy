@@ -66,6 +66,6 @@ class GoloCompileIntegrationSpec extends GoloPluginIntegrationSpec {
 		and:
 		standardErrorOutput.contains('Compilation failed; see the compiler error output for details.')
 		standardErrorOutput.contains('In Golo module: helloworld')
-		standardErrorOutput =~ /(?s)Was expecting one of:.*"\{".*"->"/
+		standardErrorOutput =~ /Encountered unexpected.*at line \d+, column \d+/
 	}
 }
