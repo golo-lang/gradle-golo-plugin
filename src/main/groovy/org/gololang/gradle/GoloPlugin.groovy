@@ -19,7 +19,7 @@ import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.internal.file.FileResolver
+import org.gradle.api.internal.file.SourceDirectorySetFactory
 import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.plugins.ApplicationPlugin
 import org.gradle.api.plugins.JavaBasePlugin
@@ -42,13 +42,13 @@ class GoloPlugin implements Plugin<Project> {
 	public static final String GOLO_CONFIGURATION_NAME = GOLO_PLUGIN_NAME
 
 	Project project
-	FileResolver fileResolver
+	SourceDirectorySetFactory sourceDirectorySetFactory
 	Configuration goloConfiguration
 	GoloPluginExtension pluginExtension
 
 	@Inject
-	GoloPlugin(FileResolver fileResolver) {
-		this.fileResolver = fileResolver
+	GoloPlugin(SourceDirectorySetFactory sourceDirectorySetFactory) {
+		this.sourceDirectorySetFactory = sourceDirectorySetFactory
 	}
 
 	@Override
@@ -66,7 +66,7 @@ class GoloPlugin implements Plugin<Project> {
 
 	private void configureSourceSetDefaults(JavaBasePlugin javaBasePlugin) {
 		project.convention.getPlugin(JavaPluginConvention).sourceSets.all { sourceSet ->
-			def goloSourceSet = new GoloSourceSet(sourceSet.displayName, fileResolver)
+			def goloSourceSet = new GoloSourceSet(sourceSet.displayName, sourceDirectorySetFactory)
 			new DslObject(sourceSet).convention.plugins.put(GOLO_PLUGIN_NAME, goloSourceSet)
 
 			goloSourceSet.golo.srcDir("src/${sourceSet.name}/golo")

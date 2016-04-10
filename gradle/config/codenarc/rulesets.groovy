@@ -75,6 +75,9 @@ ruleset {
 		ConfusingMethodName {
 			doNotApplyToClassNames = 'org.gololang.gradle.GoloSourceSet'
 		}
+		FactoryMethodName {
+			enabled = false
+		}
 	}
 	ruleset('rulesets/security.xml') {
 		JavaIoPackageAccess {
@@ -89,7 +92,7 @@ ruleset {
 	}
 	ruleset('rulesets/unnecessary.xml') {
 		UnnecessaryGetter {
-			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile'
+			doNotApplyToClassNames = 'org.gololang.gradle.GoloCompile,org.gololang.gradle.test.GoloSourceSetSpec'
 		}
 	}
 	ruleset('rulesets/unused.xml') {

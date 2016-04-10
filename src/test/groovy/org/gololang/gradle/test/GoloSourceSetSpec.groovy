@@ -18,6 +18,11 @@ package org.gololang.gradle.test
 import org.gololang.gradle.GoloSourceSet
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.internal.file.FileResolver
+import org.gradle.api.internal.file.SourceDirectorySetFactory
+import org.gradle.api.internal.file.collections.DirectoryFileTree
+import org.gradle.api.internal.file.collections.DirectoryFileTreeFactory
+import org.gradle.api.tasks.util.PatternSet
+import org.gradle.internal.Factory
 import org.gradle.internal.nativeintegration.services.NativeServices
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -31,7 +36,26 @@ class GoloSourceSetSpec extends Specification {
 	@Rule
 	TemporaryFolder nativeServicesHome
 
-	def sourceSet = new GoloSourceSet('<display-name>', [resolve: { it as File }] as FileResolver)
+	def fileResolver = Stub(FileResolver) {
+		resolve(_) >> { it as File }
+		getPatternSetFactory() >> {
+			new Factory<PatternSet>() {
+				PatternSet create() {
+					new PatternSet()
+				}
+			}
+		}
+	}
+
+	def directoryFileTreeFactory = Stub(DirectoryFileTreeFactory) {
+		create(_, _) >> { dir, pattern -> new DirectoryFileTree(dir, pattern) }
+	}
+
+	def sourceDirectorySetFactory = Stub(SourceDirectorySetFactory) {
+		create(_) >> { String name -> new DefaultSourceDirectorySet(name, fileResolver, directoryFileTreeFactory) }
+	}
+
+	def sourceSet = new GoloSourceSet('<display-name>', sourceDirectorySetFactory)
 
 	void setup() {
 		NativeServices.initialize(nativeServicesHome.root)

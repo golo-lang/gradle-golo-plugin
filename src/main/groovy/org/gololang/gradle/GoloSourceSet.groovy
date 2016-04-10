@@ -16,8 +16,7 @@
 package org.gololang.gradle
 
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.file.DefaultSourceDirectorySet
-import org.gradle.api.internal.file.FileResolver
+import org.gradle.api.internal.file.SourceDirectorySetFactory
 
 import static org.gradle.util.ConfigureUtil.configure
 
@@ -27,8 +26,8 @@ import static org.gradle.util.ConfigureUtil.configure
 class GoloSourceSet {
 	private final SourceDirectorySet golo
 
-	GoloSourceSet(String displayName, FileResolver fileResolver) {
-		golo = new DefaultSourceDirectorySet(String.format('%s Golo source', displayName), fileResolver)
+	GoloSourceSet(String displayName, SourceDirectorySetFactory sourceDirectorySetFactory) {
+		golo = sourceDirectorySetFactory.create(String.format('%s Golo source', displayName))
 		golo.filter.include('**/*.golo')
 	}
 
