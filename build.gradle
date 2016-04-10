@@ -30,7 +30,7 @@ ext {
 	localRepoDir = new File(buildDir, 'localRepo')
 	generatedTestResourcesDir = new File(buildDir, 'testResources')
 
-	goloVersion = "3.0.0-incubation"
+	goloVersion = "3.1.0"
 
 	ci = project.hasProperty('ciBuild')
 }
