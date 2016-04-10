@@ -13,7 +13,7 @@ You will also have to specify which version of Golo you wish to use to compile y
 	}
 
 	dependencies {
-		golo 'org.eclipse.golo:golo:3.0.0-incubation'
+		golo 'org.eclipse.golo:golo:3.1.0'
 	}
 
 ## Project layout
