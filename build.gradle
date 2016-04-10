@@ -19,12 +19,12 @@ plugins {
 	id 'groovy'
 	id 'codenarc'
 	id 'maven-publish'
-	id 'com.jfrog.bintray' version '1.3.1'
+	id 'com.gradle.plugin-publish' version '0.9.4'
 }
 apply from: 'gradle/idea.gradle'
 
 group = 'org.golo-lang'
-version = '0.6-SNAPSHOT'
+version = '0.6'
 
 ext {
 	localRepoDir = new File(buildDir, 'localRepo')
@@ -160,6 +160,20 @@ def pomConfig = {
 	}
 }
 
+pluginBundle {
+	website = 'https://github.com/golo-lang/gradle-golo-plugin'
+	vcsUrl = 'https://github.com/golo-lang/gradle-golo-plugin'
+	description = 'This plugin provides a task type for compiling Golo code.'
+	tags = ['golo', 'golo-lang']
+
+	plugins {
+		goloPlugin {
+			id = 'org.golo-lang.golo'
+			displayName = 'Golo plugin'
+		}
+	}
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -175,29 +189,6 @@ publishing {
 				root.appendNode('inceptionYear', '2013')
 				root.children().last() + pomConfig
 			}
-		}
-	}
-}
-
-bintray {
-	if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
-		user = bintrayUser
-		key = bintrayKey
-	}
-
-	publications = ['mavenJava']
-
-	pkg {
-		userOrg = 'golo-lang'
-		repo = 'gradle-golo-plugin'
-		name = 'org.golo-lang:gradle-golo-plugin'
-		desc = 'This plugin provides a task type for compiling Golo code.'
-		licenses = ['Apache-2.0']
-		labels = ['golo-lang']
-		version {
-			name = "${project.version}"
-			vcsTag = "v${project.version}"
-			attributes = ['gradle-plugin': 'org.golo-lang.golo:org.golo-lang:gradle-golo-plugin']
 		}
 	}
 }
