@@ -17,7 +17,14 @@ ruleset {
 	ruleset('rulesets/basic.xml')
 	ruleset('rulesets/braces.xml')
 	ruleset('rulesets/concurrency.xml')
-	ruleset('rulesets/convention.xml')
+	ruleset('rulesets/convention.xml') {
+		NoTabCharacter {
+			enabled = false
+		}
+		NoDef {
+			enabled = false
+		}
+	}
 	ruleset('rulesets/design.xml') {
 		AbstractClassWithoutAbstractMethod {
 			doNotApplyToClassNames = 'GoloPluginIntegrationSpec, IntegrationSpec'
